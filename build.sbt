@@ -1,8 +1,23 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "2.13.10"
+ThisBuild / scalaVersion := "2.12.17"
 
-lazy val root = (project in file("."))
-  .settings(
-    name := "scalajs-vite-web"
-  )
+lazy val `scalajs-vite` = (project in file("."))
+  .aggregate(`sbt-scalajs-vite`, `sbt-web-scalajs-vite`)
+
+lazy val `sbt-scalajs-vite` =
+  project
+    .in(file("sbt-scalajs-vite"))
+    .enablePlugins(SbtPlugin)
+    .settings(
+      addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.10.1")
+    )
+
+lazy val `sbt-web-scalajs-vite` =
+  project
+    .in(file("sbt-web-scalajs-vite"))
+    .enablePlugins(SbtPlugin)
+    .settings(
+      addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.1.0")
+    )
+    .dependsOn(`sbt-scalajs-vite`)
