@@ -8,3 +8,7 @@ target/
 
 /.bsp
 /.idea
+
+**/sbt-test/**/.bsp
+**/sbt-test/**/target
+**/sbt-test/**/build.properties
