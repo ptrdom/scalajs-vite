@@ -13,7 +13,7 @@ scalaJSModuleInitializers := Seq(
     .withModuleID("main")
 )
 
-TaskKey[Unit]("html") := {
+InputKey[Unit]("html") := {
   import org.openqa.selenium.WebDriver
   import org.openqa.selenium.chrome.ChromeDriver
   import org.openqa.selenium.chrome.ChromeOptions
@@ -21,6 +21,14 @@ TaskKey[Unit]("html") := {
   import org.scalatestplus.selenium.WebBrowser
   import org.scalatest.concurrent.Eventually
   import org.scalatest.concurrent.IntegrationPatience
+
+  val ags = Def.spaceDelimited().parsed.toList
+
+  val port =
+    ags match {
+      case List(port) => port
+      case _          => sys.error("missing arguments")
+    }
 
   val webBrowser = new WebBrowser
     with Matchers
@@ -45,7 +53,7 @@ TaskKey[Unit]("html") := {
   import webBrowser._
 
   eventually {
-    go to "http://localhost:5173"
+    go to s"http://localhost:$port"
     find(tagName("h1")).head.text shouldBe "basic-project works!"
   }
 

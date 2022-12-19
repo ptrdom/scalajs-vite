@@ -74,6 +74,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
       stageTask: TaskKey[sbt.Attributed[Report]],
       start: TaskKey[Unit],
       stop: TaskKey[Unit],
+      compile: TaskKey[Unit],
       command: String
   ) = {
     var processWrapper: Option[ProcessWrapper] = None
@@ -100,7 +101,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         (stageTask / stop).value
 
-        (stageTask / viteCompile).value
+        (stageTask / compile).value
 
         val targetDir = (viteInstall / crossTarget).value
 
@@ -144,14 +145,13 @@ object ScalaJSVitePlugin extends AutoPlugin {
     )
   }
 
-  override lazy val projectSettings: Seq[Setting[_]] =
-    Seq(
-      scalaJSLinkerConfig ~= {
-        _.withModuleKind(ModuleKind.ESModule)
-      }
-    ) ++
-      inConfig(Compile)(perConfigSettings) ++
-      inConfig(Test)(perConfigSettings)
+  override lazy val projectSettings: Seq[Setting[_]] = Seq(
+    scalaJSLinkerConfig ~= {
+      _.withModuleKind(ModuleKind.ESModule)
+    }
+  ) ++
+    inConfig(Compile)(perConfigSettings) ++
+    inConfig(Test)(perConfigSettings)
 
   private lazy val perConfigSettings: Seq[Setting[_]] = Seq(
     unmanagedSourceDirectories += baseDirectory.value / "vite",
@@ -199,6 +199,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
             }
           }
       }
+
       copyChanges(baseDirectory.value / "vite")
     },
     watchSources := (watchSources.value ++ Seq(
@@ -276,11 +277,13 @@ object ScalaJSVitePlugin extends AutoPlugin {
       stageTask,
       startVite,
       stopVite,
+      viteCompile,
       "dev"
     ) ++ viteTask(
       stageTask,
       startVitePreview,
       stopVitePreview,
+      viteBuild,
       "preview"
     )
   }

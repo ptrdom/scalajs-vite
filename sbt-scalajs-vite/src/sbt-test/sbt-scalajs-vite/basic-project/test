@@ -1,2 +1,15 @@
 > fastLinkJS/startVite
-> html
+> html 5173
+> fastLinkJS/stopVite
+
+> fullLinkJS/startVite
+> html 5173
+> fullLinkJS/stopVite
+
+> fastLinkJS/startVitePreview
+> html 4173
+> fastLinkJS/stopVitePreview
+
+> fullLinkJS/startVitePreview
+> html 4173
+> fullLinkJS/stopVitePreview
