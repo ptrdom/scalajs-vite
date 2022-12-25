@@ -10,5 +10,6 @@ target/
 /.idea
 
 **/sbt-test/**/.bsp
+**/sbt-test/**/.idea
 **/sbt-test/**/target
 **/sbt-test/**/build.properties

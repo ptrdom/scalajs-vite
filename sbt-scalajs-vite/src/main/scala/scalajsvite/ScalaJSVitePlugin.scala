@@ -23,25 +23,27 @@ object ScalaJSVitePlugin extends AutoPlugin {
   override def requires = ScalaJSPlugin
 
   object autoImport {
-    val viteCopyResources: TaskKey[Unit] = taskKey[Unit]("")
+    val viteResourcesDirectory = settingKey[File]("Vite resource directory")
+    val viteCopyResources: TaskKey[Unit] =
+      taskKey[Unit]("Copies over Vite resources to target directory")
     val viteInstall: TaskKey[Unit] =
       taskKey[Unit](
-        "Copies over resources to target directory and runs `npm install`"
+        "Runs `npm install` in target directory on copied over Vite resources"
       )
     val viteCompile: TaskKey[Unit] =
       taskKey[Unit](
-        "Compiles module and copies output to target directory."
+        "Compiles module and copies output to target directory"
       )
 
-    val startVite = taskKey[Unit]("Runs `vite` on target directory.")
-    val stopVite = taskKey[Unit]("Stops running `vite` on target directory.")
+    val startVite = taskKey[Unit]("Runs `vite` on target directory")
+    val stopVite = taskKey[Unit]("Stops running `vite` on target directory")
 
-    val viteBuild = taskKey[Unit]("Runs `vite build` on target directory.")
+    val viteBuild = taskKey[Unit]("Runs `vite build` on target directory")
 
     val startVitePreview =
-      taskKey[Unit]("Runs `vite preview` on target directory.")
+      taskKey[Unit]("Runs `vite preview` on target directory")
     val stopVitePreview =
-      taskKey[Unit]("Stops running `vite preview` on target directory.")
+      taskKey[Unit]("Stops running `vite preview` on target directory")
   }
 
   import autoImport._
@@ -154,7 +156,8 @@ object ScalaJSVitePlugin extends AutoPlugin {
     inConfig(Test)(perConfigSettings)
 
   private lazy val perConfigSettings: Seq[Setting[_]] = Seq(
-    unmanagedSourceDirectories += baseDirectory.value / "vite",
+    viteResourcesDirectory := baseDirectory.value / "vite",
+    unmanagedSourceDirectories += viteResourcesDirectory.value,
     viteInstall / crossTarget := {
       crossTarget.value /
         "vite" /
@@ -179,7 +182,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
             } else {
               val targetFile = new File(
                 file.getAbsolutePath.replace(
-                  (baseDirectory.value / "vite").getAbsolutePath,
+                  viteResourcesDirectory.value.getAbsolutePath,
                   targetDir.getAbsolutePath
                 )
               )
@@ -200,10 +203,10 @@ object ScalaJSVitePlugin extends AutoPlugin {
           }
       }
 
-      copyChanges(baseDirectory.value / "vite")
+      copyChanges(viteResourcesDirectory.value)
     },
     watchSources := (watchSources.value ++ Seq(
-      Watched.WatchSource(baseDirectory.value / "vite")
+      Watched.WatchSource(viteResourcesDirectory.value)
     )),
     viteInstall := {
       viteCopyResources.value
@@ -230,12 +233,12 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         IO.copyFile(
           targetDir / lockFile,
-          baseDirectory.value / "vite" / lockFile
+          viteResourcesDirectory.value / lockFile
         )
 
         Set.empty
       }(
-        Set(baseDirectory.value / "vite" / lockFile)
+        Set(viteResourcesDirectory.value / lockFile)
       )
     }
   ) ++

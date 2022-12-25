@@ -18,26 +18,11 @@ import scala.jdk.CollectionConverters._
 
 object WebScalaJSVitePlugin extends AutoPlugin {
 
-  /** @groupname settings Settings
-    */
-  object autoImport {
-
-    val npmAssets: TaskKey[Seq[PathMapping]] = taskKey[Seq[PathMapping]](
-      "Assets (resources that are not CommonJS modules) imported from the NPM packages"
-    )
-
-    val NpmAssets = scalajsvite.NpmAssets
-
-  }
-
-  import autoImport._
-
   override lazy val requires = WebScalaJS
 
   override lazy val projectSettings = Seq(
     monitoredScalaJSDirectories ++= allFrontendProjectResourceDirectories.value,
-    scalaJSPipeline := pipelineStage.value,
-    npmAssets := Nil
+    scalaJSPipeline := pipelineStage.value
   )
 
   val allFrontendProjectResourceDirectories: Def.Initialize[Seq[File]] =
@@ -46,7 +31,7 @@ object WebScalaJSVitePlugin extends AutoPlugin {
       projectRefs
         .map { project =>
           Def.setting {
-            (resourceDirectories in Compile in project).value
+            (project / Compile / resourceDirectories).value
           }
         }
         .foldLeft(Def.setting(Seq.empty[File]))((acc, resourceDirectories) =>
@@ -58,14 +43,13 @@ object WebScalaJSVitePlugin extends AutoPlugin {
     Def.settingDyn {
       val projects = scalaJSProjects.value.map(Project.projectToRef)
       Def.task {
-        // ((file, relative-path), sourceMapsEnabled)
         val bundles: Seq[(File, String)] =
           projects
             .map { project =>
               Def.settingDyn {
-                val sjsStage = (scalaJSStage in project).value match {
-                  case Stage.FastOpt => fastOptJS
-                  case Stage.FullOpt => fullOptJS
+                val sjsStage = (project / scalaJSStage).value match {
+                  case Stage.FastOpt => fastLinkJS
+                  case Stage.FullOpt => fullLinkJS
                 }
                 Def.task {
                   (project / Compile / sjsStage / viteBuild).value
@@ -83,10 +67,7 @@ object WebScalaJSVitePlugin extends AutoPlugin {
                     .asScala
                     .map(_.toFile)
                     .toSeq
-                  streams.value.log(
-                    s"viteBuildFiles ${viteBuildFiles.map(_.toPath).mkString("|")}"
-                  )
-                  viteBuildFiles.pair(Path.relativeTo(clientTarget))
+                  viteBuildFiles.pair(Path.relativeTo(dist))
                 }
               }
             }
@@ -107,7 +88,6 @@ object WebScalaJSVitePlugin extends AutoPlugin {
 
   val pipelineStage: Def.Initialize[Task[Pipeline.Stage]] =
     Def.taskDyn {
-      val npmAssetsMappings = npmAssets.value
       val include = (scalaJSPipeline / includeFilter).value
       val exclude = (scalaJSPipeline / excludeFilter).value
       val bundleMappings = bundlesWithSourceMaps.value
@@ -115,7 +95,7 @@ object WebScalaJSVitePlugin extends AutoPlugin {
       Def.task { mappings: Seq[PathMapping] =>
         val filtered = filterMappings(mappings, include, exclude)
 
-        filtered ++ bundleMappings ++ sourcemapScalaFiles ++ npmAssetsMappings
+        filtered ++ bundleMappings ++ sourcemapScalaFiles
       }
     }
 
