@@ -1,27 +1,27 @@
-$ absent vite/package-lock.json
+$ absent vite/yarn.lock
 > clean
 > fastLinkJS/startVite
 > html 5173
 > fastLinkJS/stopVite
-$ exists vite/package-lock.json
+$ exists vite/yarn.lock
 
-$ delete vite/package-lock.json
+$ delete vite/yarn.lock
 > clean
 > fullLinkJS/startVite
 > html 5173
 > fullLinkJS/stopVite
-$ exists vite/package-lock.json
+$ exists vite/yarn.lock
 
-$ delete vite/package-lock.json
+$ delete vite/yarn.lock
 > clean
 > fastLinkJS/startVitePreview
 > html 4173
 > fastLinkJS/stopVitePreview
-$ exists vite/package-lock.json
+$ exists vite/yarn.lock
 
-$ delete vite/package-lock.json
+$ delete vite/yarn.lock
 > clean
 > fullLinkJS/startVitePreview
 > html 4173
 > fullLinkJS/stopVitePreview
-$ exists vite/package-lock.json
+$ exists vite/yarn.lock

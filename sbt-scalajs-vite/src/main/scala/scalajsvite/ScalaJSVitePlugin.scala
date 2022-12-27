@@ -15,7 +15,6 @@ import sbt.Keys._
 import sbt.internal.util.ManagedLogger
 
 import scala.jdk.CollectionConverters._
-import scala.sys.process.{Process => ScalaProcess}
 import scala.sys.process.ProcessLogger
 
 object ScalaJSVitePlugin extends AutoPlugin {
@@ -23,26 +22,32 @@ object ScalaJSVitePlugin extends AutoPlugin {
   override def requires = ScalaJSPlugin
 
   object autoImport {
-    val viteResourcesDirectory = settingKey[File]("Vite resource directory")
+    val vitePackageManager: SettingKey[PackageManager] =
+      settingKey[PackageManager]("Package manager to use for Vite tasks")
+    val viteResourcesDirectory: SettingKey[sbt.File] =
+      settingKey[File]("Vite resource directory")
     val viteCopyResources: TaskKey[Unit] =
       taskKey[Unit]("Copies over Vite resources to target directory")
     val viteInstall: TaskKey[Unit] =
       taskKey[Unit](
-        "Runs `npm install` in target directory on copied over Vite resources"
+        "Runs package manager's `install` in target directory on copied over Vite resources"
       )
     val viteCompile: TaskKey[Unit] =
       taskKey[Unit](
         "Compiles module and copies output to target directory"
       )
 
-    val startVite = taskKey[Unit]("Runs `vite` on target directory")
-    val stopVite = taskKey[Unit]("Stops running `vite` on target directory")
+    val startVite: TaskKey[Unit] =
+      taskKey[Unit]("Runs `vite` on target directory")
+    val stopVite: TaskKey[Unit] =
+      taskKey[Unit]("Stops running `vite` on target directory")
 
-    val viteBuild = taskKey[Unit]("Runs `vite build` on target directory")
+    val viteBuild: TaskKey[Unit] =
+      taskKey[Unit]("Runs `vite build` on target directory")
 
-    val startVitePreview =
+    val startVitePreview: TaskKey[Unit] =
       taskKey[Unit]("Runs `vite preview` on target directory")
-    val stopVitePreview =
+    val stopVitePreview: TaskKey[Unit] =
       taskKey[Unit]("Stops running `vite preview` on target directory")
   }
 
@@ -52,18 +57,6 @@ object ScalaJSVitePlugin extends AutoPlugin {
   object Stage {
     case object FullOpt extends Stage
     case object FastOpt extends Stage
-  }
-
-  private def cmd(name: String) = sys.props("os.name").toLowerCase match {
-    case os if os.contains("win") => "cmd" :: "/c" :: name :: Nil
-    case _                        => name :: Nil
-  }
-
-  private def eagerLogger(log: ManagedLogger) = {
-    ProcessLogger(
-      out => log.info(out),
-      err => log.error(err)
-    )
   }
 
   private class ProcessWrapper(
@@ -109,29 +102,8 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         terminateProcess(logger)
 
-        // using Java Process to use `descendants`
-        val pb =
-          new ProcessBuilder(cmd("npm") ::: "run" :: command :: Nil: _*)
-        pb.directory(targetDir)
-        val p = pb.start()
-        val stdoutThread = new Thread() {
-          override def run(): Unit = {
-            scala.io.Source
-              .fromInputStream(p.getInputStream)
-              .getLines
-              .foreach(msg => logger.info(msg))
-          }
-        }
-        stdoutThread.start()
-        val stderrThread = new Thread() {
-          override def run(): Unit = {
-            scala.io.Source
-              .fromInputStream(p.getErrorStream)
-              .getLines
-              .foreach(msg => logger.error(msg))
-          }
-        }
-        stderrThread.start()
+        val (p, stdoutThread, stderrThread) =
+          vitePackageManager.value.runJava(logger)(command, targetDir)
         processWrapper = Some(new ProcessWrapper(p, stdoutThread, stderrThread))
       },
       stageTask / stop := {
@@ -150,7 +122,8 @@ object ScalaJSVitePlugin extends AutoPlugin {
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
     scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule)
-    }
+    },
+    vitePackageManager := PackageManager.Npm
   ) ++
     inConfig(Compile)(perConfigSettings) ++
     inConfig(Test)(perConfigSettings)
@@ -215,7 +188,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
       val targetDir = (viteInstall / crossTarget).value
 
-      val lockFile = "package-lock.json"
+      val lockFile = vitePackageManager.value.lockFile
 
       FileFunction.cached(
         streams.value.cacheDirectory /
@@ -227,9 +200,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
           .filter(_.exists())
           .foreach(file => IO.copyFile(file, targetDir / file.getName))
 
-        ScalaProcess(cmd("npm") ::: "install" :: Nil, targetDir)
-          .run(eagerLogger(s.log))
-          .exitValue()
+        vitePackageManager.value.install(s.log)(targetDir)
 
         IO.copyFile(
           targetDir / lockFile,
@@ -270,12 +241,9 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         val targetDir = (viteInstall / crossTarget).value
 
-        ScalaProcess(cmd("npm") ::: "run" :: "build" :: Nil, targetDir)
-          .run(eagerLogger(logger))
-          .exitValue()
+        vitePackageManager.value
+          .build(logger)(targetDir)
       }
-      // TODO figure out what makes sense here, might need to run viteBuild instead of just compile
-      // (Compile / compile) := ((Compile / compile) dependsOn viteCompile).value
     ) ++ viteTask(
       stageTask,
       startVite,
