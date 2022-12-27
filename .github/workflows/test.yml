@@ -1,0 +1,31 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: coursier/cache-action@v5
+      - uses: coursier/setup-action@v1
+        with:
+          jvm: adopt:11
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Setup yarn
+        run: corepack prepare yarn@1.22.15 --activate
+      - name: Setup pnpm
+        run: corepack prepare pnpm@7.0.1 --activate
+      - name: Scripted tests
+        run: sbt scripted
