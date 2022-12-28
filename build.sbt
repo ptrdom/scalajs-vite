@@ -18,6 +18,7 @@ inThisBuild(
 )
 
 lazy val `scalajs-vite` = (project in file("."))
+  .settings(publish / skip := true)
   .aggregate(`sbt-scalajs-vite`, `sbt-web-scalajs-vite`)
 
 lazy val commonSettings = Seq(

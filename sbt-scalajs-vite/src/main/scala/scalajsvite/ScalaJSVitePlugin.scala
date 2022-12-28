@@ -70,14 +70,15 @@ object ScalaJSVitePlugin extends AutoPlugin {
     var process: Option[Process] = None
 
     def terminateProcess(log: Logger) = {
-      log.info(s"Terminating Vite [$command] process")
-      process.foreach(_.destroy())
+      process.foreach { process =>
+        log.info(s"Stopping Vite [$command] process")
+        process.destroy()
+      }
     }
 
     Seq(
       stageTask / start := {
         val logger = state.value.globalLogging.full
-        logger.info("Starting Vite")
 
         (stageTask / stop).value
 
@@ -87,6 +88,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         terminateProcess(logger)
 
+        logger.info(s"Starting Vite [$command] process")
         process = Some(viteRunner.value.process(logger)(command, targetDir))
       },
       stageTask / stop := {
