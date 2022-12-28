@@ -1,4 +1,21 @@
-ThisBuild / scalaVersion := "2.12.17"
+inThisBuild(
+  List(
+    scalaVersion := "2.12.17",
+    organization := "me.ptrdom",
+    homepage := Some(url("https://github.com/ptrdom/scalajs-vite")),
+    licenses := List(License.MIT),
+    developers := List(
+      Developer(
+        "ptrdom",
+        "Domantas Petrauskas",
+        "dom.petrauskas@gmail.com",
+        url("http://ptrdom.me/")
+      )
+    ),
+    sonatypeCredentialHost := "s01.oss.sonatype.org",
+    sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
+  )
+)
 
 lazy val `scalajs-vite` = (project in file("."))
   .aggregate(`sbt-scalajs-vite`, `sbt-web-scalajs-vite`)
