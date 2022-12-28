@@ -17,7 +17,6 @@ lazy val client = project
       override def name = "yarn"
       override def lockFile = "yarn.lock"
       override def installCommand = "install"
-      override def runCommand = "run"
     },
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scala-js-macrotask-executor" % "1.0.0",

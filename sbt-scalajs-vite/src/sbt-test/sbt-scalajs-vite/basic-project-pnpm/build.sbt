@@ -14,7 +14,6 @@ vitePackageManager := new scalajsvite.PackageManager {
   override def name = "pnpm"
   override def lockFile = "pnpm-lock.yaml"
   override def installCommand = "install"
-  override def runCommand = "run"
 }
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0"

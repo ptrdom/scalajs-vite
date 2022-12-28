@@ -12,16 +12,17 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSLinkerOutputDirecto
 import sbt._
 import sbt.AutoPlugin
 import sbt.Keys._
-import sbt.internal.util.ManagedLogger
 
 import scala.jdk.CollectionConverters._
-import scala.sys.process.ProcessLogger
+import scala.sys.process.Process
 
 object ScalaJSVitePlugin extends AutoPlugin {
 
-  override def requires = ScalaJSPlugin
+  override def requires: Plugins = ScalaJSPlugin
 
   object autoImport {
+    val viteRunner: SettingKey[ViteRunner] =
+      settingKey[ViteRunner]("Runs Vite commands")
     val vitePackageManager: SettingKey[PackageManager] =
       settingKey[PackageManager]("Package manager to use for Vite tasks")
     val viteResourcesDirectory: SettingKey[sbt.File] =
@@ -59,12 +60,6 @@ object ScalaJSVitePlugin extends AutoPlugin {
     case object FastOpt extends Stage
   }
 
-  private class ProcessWrapper(
-      val process: Process,
-      val stdoutThread: Thread,
-      val stderrThread: Thread
-  )
-
   private def viteTask(
       stageTask: TaskKey[sbt.Attributed[Report]],
       start: TaskKey[Unit],
@@ -72,21 +67,11 @@ object ScalaJSVitePlugin extends AutoPlugin {
       compile: TaskKey[Unit],
       command: String
   ) = {
-    var processWrapper: Option[ProcessWrapper] = None
+    var process: Option[Process] = None
 
     def terminateProcess(log: Logger) = {
-      processWrapper.foreach { processWrapper =>
-        log.info(s"Terminating Vite [$command] process")
-
-        processWrapper.stdoutThread.interrupt()
-        processWrapper.stderrThread.interrupt()
-        // TODO consider using reflection to keep JDK 8 compatibility
-        processWrapper.process
-          .descendants() // requires JDK 9+
-          .forEach(process => process.destroy())
-        processWrapper.process.destroy()
-      }
-      processWrapper = None
+      log.info(s"Terminating Vite [$command] process")
+      process.foreach(_.destroy())
     }
 
     Seq(
@@ -102,9 +87,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         terminateProcess(logger)
 
-        val (p, stdoutThread, stderrThread) =
-          vitePackageManager.value.runJava(logger)(command, targetDir)
-        processWrapper = Some(new ProcessWrapper(p, stdoutThread, stderrThread))
+        process = Some(viteRunner.value.process(logger)(command, targetDir))
       },
       stageTask / stop := {
         terminateProcess(streams.value.log)
@@ -123,6 +106,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
     scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule)
     },
+    viteRunner := ViteRunner.Default,
     vitePackageManager := PackageManager.Npm
   ) ++
     inConfig(Compile)(perConfigSettings) ++
@@ -241,8 +225,9 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         val targetDir = (viteInstall / crossTarget).value
 
-        vitePackageManager.value
-          .build(logger)(targetDir)
+        viteRunner.value
+          .process(logger)("build", targetDir)
+          .exitValue()
       }
     ) ++ viteTask(
       stageTask,
