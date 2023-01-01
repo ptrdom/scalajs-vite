@@ -109,13 +109,13 @@ object ScalaJSVitePlugin extends AutoPlugin {
       _.withModuleKind(ModuleKind.ESModule)
     },
     viteRunner := ViteRunner.Default,
+    viteResourcesDirectory := baseDirectory.value / "vite",
     vitePackageManager := PackageManager.Npm
   ) ++
     inConfig(Compile)(perConfigSettings) ++
     inConfig(Test)(perConfigSettings)
 
   private lazy val perConfigSettings: Seq[Setting[_]] = Seq(
-    viteResourcesDirectory := baseDirectory.value / "vite",
     unmanagedSourceDirectories += viteResourcesDirectory.value,
     viteInstall / crossTarget := {
       crossTarget.value /
