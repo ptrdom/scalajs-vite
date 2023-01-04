@@ -60,6 +60,45 @@ object ScalaJSVitePlugin extends AutoPlugin {
     case object FastOpt extends Stage
   }
 
+  private def copyChanges(
+      logger: Logger
+  )(
+      sourceDirectory: File,
+      targetDirectory: File,
+      currentDirectory: File
+  ): Unit = {
+    logger.debug(s"Walking directory [${currentDirectory.getAbsolutePath}]")
+    Files
+      .walk(currentDirectory.toPath)
+      .iterator()
+      .asScala
+      .map(_.toFile)
+      .filter(file => file.getAbsolutePath != currentDirectory.getAbsolutePath)
+      .foreach { file =>
+        if (file.isDirectory) {
+          copyChanges(logger)(sourceDirectory, targetDirectory, file)
+        } else {
+          val targetFile = new File(
+            file.getAbsolutePath.replace(
+              sourceDirectory.getAbsolutePath,
+              targetDirectory.getAbsolutePath
+            )
+          )
+          if (!Hash(file).sameElements(Hash(targetFile))) {
+            logger.debug(
+              s"File changed [${file.getAbsolutePath}], copying to [${targetFile.getAbsolutePath}]"
+            )
+            IO.copyFile(
+              file,
+              targetFile
+            )
+          } else {
+            logger.debug(s"File not changed [${file.getAbsolutePath}]")
+          }
+        }
+      }
+  }
+
   private def viteTask(
       stageTask: TaskKey[sbt.Attributed[Report]],
       start: TaskKey[Unit],
@@ -74,6 +113,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
         log.info(s"Stopping Vite [$command] process")
         process.destroy()
       }
+      process = None
     }
 
     Seq(
@@ -85,8 +125,6 @@ object ScalaJSVitePlugin extends AutoPlugin {
         (stageTask / compile).value
 
         val targetDir = (viteInstall / crossTarget).value
-
-        terminateProcess(logger)
 
         logger.info(s"Starting Vite [$command] process")
         process = Some(viteRunner.value.process(logger)(command, targetDir))
@@ -127,42 +165,11 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
       val targetDir = (viteInstall / crossTarget).value
 
-      def copyChanges(directory: File): Unit = {
-        s.log.debug(s"walking ${directory.getAbsolutePath}")
-        Files
-          .walk(directory.toPath)
-          .iterator()
-          .asScala
-          .map(_.toFile)
-          .filter(file => file.getAbsolutePath != directory.getAbsolutePath)
-          .foreach { file =>
-            if (file.isDirectory) {
-              copyChanges(file)
-            } else {
-              val targetFile = new File(
-                file.getAbsolutePath.replace(
-                  viteResourcesDirectory.value.getAbsolutePath,
-                  targetDir.getAbsolutePath
-                )
-              )
-              if (!Hash(file).sameElements(Hash(targetFile))) {
-                s.log.debug(
-                  s"File changed [${file.getAbsolutePath}], copying [${targetFile.getAbsolutePath}]"
-                )
-                IO.copyFile(
-                  file,
-                  targetFile
-                )
-                true
-              } else {
-                s.log.debug(s"File not changed [${file.getAbsolutePath}]")
-                false
-              }
-            }
-          }
-      }
-
-      copyChanges(viteResourcesDirectory.value)
+      copyChanges(s.log)(
+        viteResourcesDirectory.value,
+        targetDir,
+        viteResourcesDirectory.value
+      )
     },
     watchSources := (watchSources.value ++ Seq(
       Watched.WatchSource(viteResourcesDirectory.value)
@@ -181,10 +188,8 @@ object ScalaJSVitePlugin extends AutoPlugin {
           "vite" /
           (if (configuration.value == Compile) "main" else "test"),
         inStyle = FilesInfo.hash
-      ) { filesToCopy =>
-        filesToCopy
-          .filter(_.exists())
-          .foreach(file => IO.copyFile(file, targetDir / file.getName))
+      ) { _ =>
+        s.log.debug(s"Installing packages")
 
         vitePackageManager.value.install(s.log)(targetDir)
 
@@ -195,7 +200,10 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         Set.empty
       }(
-        Set(viteResourcesDirectory.value / lockFile)
+        Set(
+          viteResourcesDirectory.value / "package.json",
+          viteResourcesDirectory.value / lockFile
+        )
       )
     }
   ) ++
@@ -216,9 +224,11 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         stageTask.value
 
-        (stageTask / scalaJSLinkerOutputDirectory).value
-          .listFiles()
-          .foreach(file => IO.copyFile(file, targetDir / file.name))
+        copyChanges(streams.value.log)(
+          (stageTask / scalaJSLinkerOutputDirectory).value,
+          targetDir,
+          (stageTask / scalaJSLinkerOutputDirectory).value
+        )
       },
       stageTask / viteBuild := {
         (stageTask / viteCompile).value
@@ -227,6 +237,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         val targetDir = (viteInstall / crossTarget).value
 
+        // TODO cache based on stage task output and Vite resources
         viteRunner.value
           .process(logger)("build", targetDir)
           .exitValue()
