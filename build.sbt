@@ -24,7 +24,8 @@ lazy val `scalajs-vite` = (project in file("."))
 lazy val commonSettings = Seq(
   scriptedLaunchOpts ++= Seq(
     "-Dplugin.version=" + version.value
-  )
+  ),
+  scriptedBufferLog := false
 )
 
 lazy val `sbt-scalajs-vite` =

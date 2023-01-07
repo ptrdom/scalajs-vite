@@ -22,37 +22,53 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
   object autoImport {
     val viteRunner: SettingKey[ViteRunner] =
-      settingKey[ViteRunner]("Runs Vite commands")
+      settingKey("Runs Vite commands")
     val vitePackageManager: SettingKey[PackageManager] =
-      settingKey[PackageManager]("Package manager to use for Vite tasks")
+      settingKey("Package manager to use for Vite tasks")
     val viteResourcesDirectory: SettingKey[sbt.File] =
-      settingKey[File]("Vite resource directory")
-    val viteCopyResources: TaskKey[Unit] =
-      taskKey[Unit]("Copies over Vite resources to target directory")
-    val viteInstall: TaskKey[Unit] =
-      taskKey[Unit](
+      settingKey("Vite resource directory")
+    val viteCopyResources: TaskKey[ChangeStatus] =
+      taskKey("Copies over Vite resources to target directory")
+    val viteInstall: TaskKey[ChangeStatus] =
+      taskKey(
         "Runs package manager's `install` in target directory on copied over Vite resources"
       )
-    val viteCompile: TaskKey[Unit] =
-      taskKey[Unit](
+    val viteCompile: TaskKey[ChangeStatus] =
+      taskKey(
         "Compiles module and copies output to target directory"
       )
 
     val startVite: TaskKey[Unit] =
-      taskKey[Unit]("Runs `vite` on target directory")
+      taskKey("Runs `vite` on target directory")
     val stopVite: TaskKey[Unit] =
-      taskKey[Unit]("Stops running `vite` on target directory")
+      taskKey("Stops running `vite` on target directory")
 
-    val viteBuild: TaskKey[Unit] =
-      taskKey[Unit]("Runs `vite build` on target directory")
+    val viteBuild: TaskKey[ChangeStatus] =
+      taskKey("Runs `vite build` on target directory")
 
     val startVitePreview: TaskKey[Unit] =
-      taskKey[Unit]("Runs `vite preview` on target directory")
+      taskKey("Runs `vite preview` on target directory")
     val stopVitePreview: TaskKey[Unit] =
-      taskKey[Unit]("Stops running `vite preview` on target directory")
+      taskKey("Stops running `vite preview` on target directory")
   }
 
   import autoImport._
+
+  sealed trait ChangeStatus
+  object ChangeStatus {
+    case object Pristine extends ChangeStatus
+    case object Dirty extends ChangeStatus
+
+    implicit class ChangeStatusOps(changeStatus: ChangeStatus) {
+      def combine(other: ChangeStatus): ChangeStatus = {
+        (changeStatus, other) match {
+          case (Pristine, Pristine) =>
+            Pristine
+          case _ => Dirty
+        }
+      }
+    }
+  }
 
   sealed trait Stage
   object Stage {
@@ -66,7 +82,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
       sourceDirectory: File,
       targetDirectory: File,
       currentDirectory: File
-  ): Unit = {
+  ): ChangeStatus = {
     logger.debug(s"Walking directory [${currentDirectory.getAbsolutePath}]")
     Files
       .walk(currentDirectory.toPath)
@@ -74,28 +90,31 @@ object ScalaJSVitePlugin extends AutoPlugin {
       .asScala
       .map(_.toFile)
       .filter(file => file.getAbsolutePath != currentDirectory.getAbsolutePath)
-      .foreach { file =>
-        if (file.isDirectory) {
-          copyChanges(logger)(sourceDirectory, targetDirectory, file)
-        } else {
-          val targetFile = new File(
-            file.getAbsolutePath.replace(
-              sourceDirectory.getAbsolutePath,
-              targetDirectory.getAbsolutePath
-            )
-          )
-          if (!Hash(file).sameElements(Hash(targetFile))) {
-            logger.debug(
-              s"File changed [${file.getAbsolutePath}], copying to [${targetFile.getAbsolutePath}]"
-            )
-            IO.copyFile(
-              file,
-              targetFile
-            )
+      .foldLeft[ChangeStatus](ChangeStatus.Pristine) {
+        case (changeStatus, file) =>
+          if (file.isDirectory) {
+            copyChanges(logger)(sourceDirectory, targetDirectory, file)
           } else {
-            logger.debug(s"File not changed [${file.getAbsolutePath}]")
+            val targetFile = new File(
+              file.getAbsolutePath.replace(
+                sourceDirectory.getAbsolutePath,
+                targetDirectory.getAbsolutePath
+              )
+            )
+            if (!Hash(file).sameElements(Hash(targetFile))) {
+              logger.debug(
+                s"File changed [${file.getAbsolutePath}], copying to [${targetFile.getAbsolutePath}]"
+              )
+              IO.copyFile(
+                file,
+                targetFile
+              )
+              ChangeStatus.Dirty
+            } else {
+              logger.debug(s"File not changed [${file.getAbsolutePath}]")
+              changeStatus
+            }
           }
-        }
       }
   }
 
@@ -103,7 +122,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
       stageTask: TaskKey[sbt.Attributed[Report]],
       start: TaskKey[Unit],
       stop: TaskKey[Unit],
-      compile: TaskKey[Unit],
+      compile: TaskKey[ChangeStatus],
       command: String
   ) = {
     var process: Option[Process] = None
@@ -175,7 +194,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
       Watched.WatchSource(viteResourcesDirectory.value)
     )),
     viteInstall := {
-      viteCopyResources.value
+      val changeStatus = viteCopyResources.value
 
       val s = streams.value
 
@@ -205,6 +224,8 @@ object ScalaJSVitePlugin extends AutoPlugin {
           viteResourcesDirectory.value / lockFile
         )
       )
+
+      changeStatus
     }
   ) ++
     perScalaJSStageSettings(Stage.FastOpt) ++
@@ -218,7 +239,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
     Seq(
       stageTask / viteCompile := {
-        viteInstall.value
+        val changeStatus = viteInstall.value
 
         val targetDir = (viteInstall / crossTarget).value
 
@@ -228,19 +249,22 @@ object ScalaJSVitePlugin extends AutoPlugin {
           (stageTask / scalaJSLinkerOutputDirectory).value,
           targetDir,
           (stageTask / scalaJSLinkerOutputDirectory).value
-        )
+        ).combine(changeStatus)
       },
       stageTask / viteBuild := {
-        (stageTask / viteCompile).value
+        val changeStatus = (stageTask / viteCompile).value
 
         val logger = state.value.globalLogging.full
 
         val targetDir = (viteInstall / crossTarget).value
 
-        // TODO cache based on stage task output and Vite resources
-        viteRunner.value
-          .process(logger)("build", targetDir)
-          .exitValue()
+        if (changeStatus == ChangeStatus.Dirty) {
+          viteRunner.value
+            .process(logger)("build", targetDir)
+            .exitValue()
+        }
+
+        changeStatus
       }
     ) ++ viteTask(
       stageTask,
