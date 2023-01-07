@@ -13,15 +13,16 @@ trait PackageManager {
 
   def installCommand: String
   def install(logger: Logger)(directory: File): Unit = {
-    Process(
+    val exitValue = Process(
       (sys.props("os.name").toLowerCase match {
         case os if os.contains("win") => "cmd" :: "/c" :: Nil
         case _                        => Nil
       }) ::: name :: Nil ::: installCommand :: Nil,
       directory
-    )
-      .run(eagerLogger(logger))
-      .exitValue()
+    ).run(logger).exitValue()
+    if (exitValue != 0) {
+      sys.error(s"Nonzero exit value: $exitValue")
+    } else ()
   }
 }
 

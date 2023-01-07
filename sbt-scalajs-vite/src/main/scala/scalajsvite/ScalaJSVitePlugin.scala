@@ -260,8 +260,7 @@ object ScalaJSVitePlugin extends AutoPlugin {
 
         if (changeStatus == ChangeStatus.Dirty) {
           viteRunner.value
-            .process(logger)("build", targetDir)
-            .exitValue()
+            .run(logger)("build", targetDir)
         }
 
         changeStatus
