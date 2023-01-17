@@ -23,12 +23,12 @@ object Main extends App {
     })
 
     // and load the index.html of the app.
-    val url = process.env.VITE_DEV_SERVER_URL.asInstanceOf[String]
-    if (url != null) {
-      mainWindow.loadURL(url)
-    } else {
-      mainWindow.loadFile(join(__dirname, "dist", "index.html"))
-    }
+    process.env.VITE_DEV_SERVER_URL
+      .asInstanceOf[js.UndefOr[String]]
+      .toOption
+      .fold(
+        mainWindow.loadFile(join(__dirname, "../dist", "index.html"))
+      )(url => mainWindow.loadURL(url))
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
