@@ -1,9 +1,9 @@
 package example
 
-import example.electron.BrowserWindow
-import example.electron.BrowserWindowConfig
-import example.electron.ElectronGlobals.app
-import example.electron.WebPreferences
+import example.facade.electron.BrowserWindow
+import example.facade.electron.BrowserWindowConfig
+import example.facade.electron.ElectronGlobals.app
+import example.facade.electron.WebPreferences
 import example.facade.node.NodeGlobals.__dirname
 import example.facade.node.NodeGlobals.process
 import example.facade.node.Path.join
