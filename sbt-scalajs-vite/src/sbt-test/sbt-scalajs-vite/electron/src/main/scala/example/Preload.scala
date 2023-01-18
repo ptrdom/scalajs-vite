@@ -13,7 +13,6 @@ import scala.scalajs.js
   * https://www.electronjs.org/docs/latest/tutorial/sandbox
   */
 object Preload extends App {
-  println("Preload works")
   window.addEventListener(
     "DOMContentLoaded",
     (_ => {
