@@ -22,6 +22,8 @@ scalaJSModuleInitializers := Seq(
 Compile / mainClass := None
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
+libraryDependencies += "org.scalatestplus" %% "selenium-4-7" % "3.2.15.0" % Test
 
 val viteElectronBuildPackage =
   taskKey[Unit]("Generate package directory with electron-builder")
@@ -69,6 +71,9 @@ def viteElectronBuildTask(): Seq[Setting[_]] = {
 }
 
 viteElectronBuildTask()
+
+//TODO add Test / test dependency on viteElectronBuildPackage
+//TODO might need to set up IntegrationTest / test instead
 
 //InputKey[Unit]("html") := {
 //  import org.openqa.selenium.WebDriver
