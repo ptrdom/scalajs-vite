@@ -19,7 +19,7 @@ trait PackageManager {
         case _                        => Nil
       }) ::: name :: Nil ::: installCommand :: Nil,
       directory
-    ).run(logger).exitValue()
+    ).run(eagerLogger(logger)).exitValue()
     if (exitValue != 0) {
       sys.error(s"Nonzero exit value: $exitValue")
     } else ()
