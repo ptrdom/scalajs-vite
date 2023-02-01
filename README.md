@@ -3,12 +3,11 @@
 scalajs-vite is a module bundler for Scala.js projects that use npm packages: it bundles the .js file emitted by the 
 Scala.js compiler with its npm dependencies into a single .js file using Vite.
 
-Setup and use of this plugin should feel quite familiar to users of well known 
-[scalajs-bundler](https://scalacenter.github.io/scalajs-bundler), with the main difference being  that there is no special 
-handling of `npmDependencies` - they must be provided through `package.json` placed within `vite` directory in project's
-base.
-
 ## Getting started
+
+Plugin should feel quite familiar to the users of well known [scalajs-bundler](https://scalacenter.github.io/scalajs-bundler), 
+with the main difference being  that there is no special handling of `npmDependencies` - they must be provided through 
+`package.json` placed within `vite` directory in project's base.
 
 ### Basic setup
 
