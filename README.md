@@ -81,7 +81,7 @@ See `sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/` directory for basic example pr
    lazy val server = project
      .settings(
        scalaJSProjects := Seq(client),
-       pipelineStages in Assets := Seq(scalaJSPipeline)
+       pipelineStages := Seq(scalaJSPipeline)
      )
      .enablePlugins(WebScalaJSVitePlugin)
     
