@@ -1,0 +1,25 @@
+$ absent vite/package-lock.json
+> clean
+> fastLinkJS/startVite
+# TODO html test with selenium and electron-chromedriver
+> fastLinkJS/stopVite
+$ exists vite/package-lock.json
+
+$ delete vite/package-lock.json
+> clean
+> fullLinkJS/startVite
+# TODO html test with selenium and electron-chromedriver
+> fullLinkJS/stopVite
+$ exists vite/package-lock.json
+
+$ delete vite/package-lock.json
+> clean
+> fastLinkJS/viteElectronBuildPackage
+> fastLinkJS/viteElectronBuildDistributable
+$ exists vite/package-lock.json
+
+$ delete vite/package-lock.json
+> clean
+> fullLinkJS/viteElectronBuildPackage
+> fullLinkJS/viteElectronBuildDistributable
+$ exists vite/package-lock.json

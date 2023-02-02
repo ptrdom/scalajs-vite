@@ -1,12 +1,12 @@
 # scalajs-vite
 
-scalajs-vite is a module bundler for Scala.js projects that use npm packages: it bundles the .js file emitted by the 
-Scala.js compiler with its npm dependencies into a single .js file using Vite.
+scalajs-vite is a module bundler for Scala.js projects that use npm packages: it bundles the .js files emitted by the 
+Scala.js compiler with their npm dependencies into a single .js file using Vite.
 
 ## Getting started
 
 Plugin should feel quite familiar to the users of well known [scalajs-bundler](https://scalacenter.github.io/scalajs-bundler), 
-with the main difference being  that there is no special handling of `npmDependencies` - they must be provided through 
+with the main difference being that there is no special handling of `npmDependencies` - they must be provided through 
 `package.json` placed within `vite` directory in project's base.
 
 ### Basic setup
@@ -89,7 +89,7 @@ See `sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/` directory for basic example pr
 
 See `sbt-web-scalajs-vite/sbt-test/sbt-web-scalajs-vite/` directory for basic example projects.
 
-### Package managers
+## Package managers
 
 
 Uses [npm](https://www.npmjs.com/) by default, but provided `PackageManager` abstraction allows configuration of other
@@ -110,6 +110,14 @@ vitePackageManager := new scalajsvite.PackageManager {
   override def installCommand = "install"
 }
 ```
+
+## Electron
+
+Plugin is also suitable for working with [Electron](https://www.electronjs.org/) projects. Each Electron script should 
+be specified as a seperate module in `scalaJSModuleInitializers`. Then the typical electron workflows can be executed
+with the use of [vite-plugin-electron](https://github.com/electron-vite/vite-plugin-electron).
+
+Example project can be found in`sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/electron-project/`.
 
 ## License
 
