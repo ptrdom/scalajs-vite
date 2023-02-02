@@ -3,6 +3,3 @@ val scalaJSViteVersion = sys.props.getOrElse(
   sys.error("'plugin.version' environment variable is not set")
 )
 addSbtPlugin("me.ptrdom" % "sbt-scalajs-vite" % scalaJSViteVersion)
-
-libraryDependencies += "org.scalatestplus" %% "selenium-4-4" % "3.2.14.0"
-libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.14"
