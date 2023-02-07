@@ -15,23 +15,6 @@ inThisBuild(
     sonatypeCredentialHost := "s01.oss.sonatype.org",
     sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
     versionScheme := Some("semver-spec")
-  ) ++ (
-    // disable parallel execution in Windows CI runners as a workaround for flaky errors like:
-    //   java.io.FileNotFoundException:
-    //     C:\Users\runneradmin\AppData\Local\Coursier\Cache\v1\.structure.lock
-    //     (The process cannot access the file because it is being used by another process)
-    if (
-      sys.env
-        .get("CI")
-        .exists(_.nonEmpty) && sys
-        .props("os.name")
-        .toLowerCase
-        .contains("win")
-    ) {
-      List(
-        Global / concurrentRestrictions := Seq(Tags.limit(Tags.All, 1))
-      )
-    } else List.empty
   )
 )
 
