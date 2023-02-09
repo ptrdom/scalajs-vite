@@ -1,27 +1,27 @@
 $ absent vite/yarn.lock
 > clean
 > fastLinkJS/startVite
-> html 5173
+> html 5176
 > fastLinkJS/stopVite
 $ exists vite/yarn.lock
 
 $ delete vite/yarn.lock
 > clean
 > fullLinkJS/startVite
-> html 5173
+> html 5176
 > fullLinkJS/stopVite
 $ exists vite/yarn.lock
 
 $ delete vite/yarn.lock
 > clean
 > fastLinkJS/startVitePreview
-> html 4173
+> html 4176
 > fastLinkJS/stopVitePreview
 $ exists vite/yarn.lock
 
 $ delete vite/yarn.lock
 > clean
 > fullLinkJS/startVitePreview
-> html 4173
+> html 4176
 > fullLinkJS/stopVitePreview
 $ exists vite/yarn.lock

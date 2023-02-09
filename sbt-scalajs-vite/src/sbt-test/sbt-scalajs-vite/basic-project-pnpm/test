@@ -1,27 +1,27 @@
 $ absent vite/pnpm-lock.yaml
 > clean
 > fastLinkJS/startVite
-> html 5173
+> html 5175
 > fastLinkJS/stopVite
 $ exists vite/pnpm-lock.yaml
 
 $ delete vite/pnpm-lock.yaml
 > clean
 > fullLinkJS/startVite
-> html 5173
+> html 5175
 > fullLinkJS/stopVite
 $ exists vite/pnpm-lock.yaml
 
 $ delete vite/pnpm-lock.yaml
 > clean
 > fastLinkJS/startVitePreview
-> html 4173
+> html 4175
 > fastLinkJS/stopVitePreview
 $ exists vite/pnpm-lock.yaml
 
 $ delete vite/pnpm-lock.yaml
 > clean
 > fullLinkJS/startVitePreview
-> html 4173
+> html 4175
 > fullLinkJS/stopVitePreview
 $ exists vite/pnpm-lock.yaml

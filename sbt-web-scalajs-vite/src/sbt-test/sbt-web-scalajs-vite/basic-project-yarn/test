@@ -1,14 +1,14 @@
 $ absent client/vite/yarn.lock
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FastOpt
-> server/bgRun
-> html 8080
+> server/bgRun 8082
+> html 8082
 $ exists client/vite/yarn.lock
 -> exit
 
 $ delete client/vite/yarn.lock
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
-> server/bgRun
-> html 8080
+> server/bgRun 8082
+> html 8082
 $ exists client/vite/yarn.lock
 -> exit

@@ -81,7 +81,7 @@ InputKey[Unit]("html") := {
   }
 
   eventually {
-    find(tagName("h1")).head.text shouldBe "basic-project works!"
+    find(tagName("h1")).head.text shouldBe "basic-project-sbt-web works!"
   }
 
   ()

@@ -1,6 +1,6 @@
 $ absent client/vite/package-lock.json
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FastOpt
-> server/bgRun
+> server/bgRun 8080
 > html 8080
 $ exists client/vite/package-lock.json
 -> exit
@@ -8,7 +8,7 @@ $ exists client/vite/package-lock.json
 $ delete client/vite/package-lock.json
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
-> server/bgRun
+> server/bgRun 8080
 > html 8080
 $ exists client/vite/package-lock.json
 -> exit

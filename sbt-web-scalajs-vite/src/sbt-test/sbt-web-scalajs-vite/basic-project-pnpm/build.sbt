@@ -2,7 +2,7 @@ import org.scalajs.linker.interface.ModuleInitializer
 
 ThisBuild / scalaVersion := "2.13.8"
 
-lazy val `basic-project` = (project in file(".")).aggregate(client, server)
+lazy val `basic-project-pnpm` = (project in file(".")).aggregate(client, server)
 
 lazy val client = project
   .in(file("client"))
@@ -86,7 +86,7 @@ InputKey[Unit]("html") := {
   }
 
   eventually {
-    find(tagName("h1")).head.text shouldBe "basic-project works!"
+    find(tagName("h1")).head.text shouldBe "basic-project-pnpm-sbt-web works!"
   }
 
   ()

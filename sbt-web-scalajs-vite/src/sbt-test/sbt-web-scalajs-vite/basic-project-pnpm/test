@@ -1,14 +1,14 @@
 $ absent client/vite/pnpm-lock.yaml
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FastOpt
-> server/bgRun
-> html 8080
+> server/bgRun 8081
+> html 8081
 $ exists client/vite/pnpm-lock.yaml
 -> exit
 
 $ delete client/vite/pnpm-lock.yaml
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
-> server/bgRun
-> html 8080
+> server/bgRun 8081
+> html 8081
 $ exists client/vite/pnpm-lock.yaml
 -> exit
