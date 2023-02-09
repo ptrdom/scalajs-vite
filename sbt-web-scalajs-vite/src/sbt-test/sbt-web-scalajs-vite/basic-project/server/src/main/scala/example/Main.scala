@@ -38,7 +38,7 @@ object Main extends App {
     }
   )
 
-  val binding = Http().newServerAt("0.0.0.0", args.headOption.map(_.toInt).getOrElse(sys.error("Missing port argument"))).bind(route)
+  val binding = Http().newServerAt("0.0.0.0", 8080).bind(route)
 
   binding.onComplete {
     case Success(binding) =>

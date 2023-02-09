@@ -3,7 +3,7 @@
 $ absent client/vite/package-lock.json
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FastOpt
-> server/bgRun 8080
+> server/bgRun
 > html 8080
 $ exists client/vite/package-lock.json
 -> exit
@@ -11,7 +11,7 @@ $ exists client/vite/package-lock.json
 $ delete client/vite/package-lock.json
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
-> server/bgRun 8080
+> server/bgRun
 > html 8080
 $ exists client/vite/package-lock.json
 -> exit
@@ -24,7 +24,7 @@ $ absent client/vite/pnpm-lock.yaml
 > set client/vitePackageManager := new scalajsvite.PackageManager { override def name = "pnpm"; override def lockFile = "pnpm-lock.yaml"; override def installCommand = "install";  }
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FastOpt
-> server/bgRun 8080
+> server/bgRun
 > html 8080
 $ exists client/vite/pnpm-lock.yaml
 -> exit
@@ -33,7 +33,7 @@ $ delete client/vite/pnpm-lock.yaml
 > set client/vitePackageManager := new scalajsvite.PackageManager { override def name = "pnpm"; override def lockFile = "pnpm-lock.yaml"; override def installCommand = "install";  }
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
-> server/bgRun 8080
+> server/bgRun
 > html 8080
 $ exists client/vite/pnpm-lock.yaml
 -> exit
@@ -46,7 +46,7 @@ $ absent client/vite/yarn.lock
 > set client/vitePackageManager := new scalajsvite.PackageManager { override def name = "yarn"; override def lockFile = "yarn.lock"; override def installCommand = "install";  }
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FastOpt
-> server/bgRun 8080
+> server/bgRun
 > html 8080
 $ exists client/vite/yarn.lock
 -> exit
@@ -55,7 +55,7 @@ $ delete client/vite/yarn.lock
 > set client/vitePackageManager := new scalajsvite.PackageManager { override def name = "yarn"; override def lockFile = "yarn.lock"; override def installCommand = "install";  }
 > clean
 > set client/scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
-> server/bgRun 8080
+> server/bgRun
 > html 8080
 $ exists client/vite/yarn.lock
 -> exit

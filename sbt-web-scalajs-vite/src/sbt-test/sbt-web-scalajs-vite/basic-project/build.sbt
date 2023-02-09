@@ -1,5 +1,3 @@
-import org.scalajs.linker.interface.ModuleInitializer
-
 ThisBuild / scalaVersion := "2.13.8"
 
 lazy val `basic-project` = (project in file(".")).aggregate(client, server)

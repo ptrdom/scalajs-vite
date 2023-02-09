@@ -1,5 +1,3 @@
-import org.scalajs.linker.interface.ModuleInitializer
-
 enablePlugins(ScalaJSVitePlugin)
 
 scalaVersion := "2.13.8"

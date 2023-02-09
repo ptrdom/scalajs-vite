@@ -3,28 +3,28 @@
 $ absent vite/package-lock.json
 > clean
 > fastLinkJS/startVite
-> html 5174
+> html 5173
 > fastLinkJS/stopVite
 $ exists vite/package-lock.json
 
 $ delete vite/package-lock.json
 > clean
 > fullLinkJS/startVite
-> html 5174
+> html 5173
 > fullLinkJS/stopVite
 $ exists vite/package-lock.json
 
 $ delete vite/package-lock.json
 > clean
 > fastLinkJS/startVitePreview
-> html 4174
+> html 4173
 > fastLinkJS/stopVitePreview
 $ exists vite/package-lock.json
 
 $ delete vite/package-lock.json
 > clean
 > fullLinkJS/startVitePreview
-> html 4174
+> html 4173
 > fullLinkJS/stopVitePreview
 $ exists vite/package-lock.json
 
@@ -36,7 +36,7 @@ $ absent vite/pnpm-lock.yaml
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "pnpm"; override def lockFile = "pnpm-lock.yaml"; override def installCommand = "install";  }
 > clean
 > fastLinkJS/startVite
-> html 5174
+> html 5173
 > fastLinkJS/stopVite
 $ exists vite/pnpm-lock.yaml
 
@@ -44,7 +44,7 @@ $ delete vite/pnpm-lock.yaml
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "pnpm"; override def lockFile = "pnpm-lock.yaml"; override def installCommand = "install";  }
 > clean
 > fullLinkJS/startVite
-> html 5174
+> html 5173
 > fullLinkJS/stopVite
 $ exists vite/pnpm-lock.yaml
 
@@ -52,7 +52,7 @@ $ delete vite/pnpm-lock.yaml
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "pnpm"; override def lockFile = "pnpm-lock.yaml"; override def installCommand = "install";  }
 > clean
 > fastLinkJS/startVitePreview
-> html 4174
+> html 4173
 > fastLinkJS/stopVitePreview
 $ exists vite/pnpm-lock.yaml
 
@@ -60,7 +60,7 @@ $ delete vite/pnpm-lock.yaml
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "pnpm"; override def lockFile = "pnpm-lock.yaml"; override def installCommand = "install";  }
 > clean
 > fullLinkJS/startVitePreview
-> html 4174
+> html 4173
 > fullLinkJS/stopVitePreview
 $ exists vite/pnpm-lock.yaml
 
@@ -72,7 +72,7 @@ $ absent vite/yarn.lock
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "yarn"; override def lockFile = "yarn.lock"; override def installCommand = "install";  }
 > clean
 > fastLinkJS/startVite
-> html 5174
+> html 5173
 > fastLinkJS/stopVite
 $ exists vite/yarn.lock
 
@@ -80,7 +80,7 @@ $ delete vite/yarn.lock
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "yarn"; override def lockFile = "yarn.lock"; override def installCommand = "install";  }
 > clean
 > fullLinkJS/startVite
-> html 5174
+> html 5173
 > fullLinkJS/stopVite
 $ exists vite/yarn.lock
 
@@ -88,7 +88,7 @@ $ delete vite/yarn.lock
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "yarn"; override def lockFile = "yarn.lock"; override def installCommand = "install";  }
 > clean
 > fastLinkJS/startVitePreview
-> html 4174
+> html 4173
 > fastLinkJS/stopVitePreview
 $ exists vite/yarn.lock
 
@@ -96,6 +96,6 @@ $ delete vite/yarn.lock
 > set vitePackageManager := new scalajsvite.PackageManager { override def name = "yarn"; override def lockFile = "yarn.lock"; override def installCommand = "install";  }
 > clean
 > fullLinkJS/startVitePreview
-> html 4174
+> html 4173
 > fullLinkJS/stopVitePreview
 $ exists vite/yarn.lock
