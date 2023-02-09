@@ -38,14 +38,10 @@ with the main difference being that there is no special handling of `npmDependen
    enablePlugins(ScalaJSVitePlugin)
    ```
    
-1. Specify application entrypoint:
+1. Specify that Scala.js project is an application with an entrypoint:
 
    ```
-   scalaJSModuleInitializers := Seq(
-     ModuleInitializer
-       .mainMethodWithArgs("example.Main", "main")
-       .withModuleID("main")
-   )
+   scalaJSUseMainModuleInitializer := true
    ```
    
    Such configuration would allow `main.js` bundle to be used in Vite entrypoint:
@@ -66,7 +62,7 @@ directory.
 All files in `vite` directory are copied to Vite working directory, so any other web resources and relevant configuration
 files can be put there.
 
-See `sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/` directory for basic example projects.
+See [sbt-scalajs-vite/src/sbt-test/sbt-scalajs-vite/basic-project](sbt-scalajs-vite/src/sbt-test/sbt-scalajs-vite/basic-project) directory for basic example project.
 
 ### Integrating with sbt-web
 
@@ -89,7 +85,7 @@ See `sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/` directory for basic example pr
    lazy val client = project.enablePlugins(ScalaJSVitePlugin)
    ```
 
-See `sbt-web-scalajs-vite/sbt-test/sbt-web-scalajs-vite/` directory for basic example projects.
+See [sbt-web-scalajs-vite/src/sbt-test/sbt-web-scalajs-vite/basic-project](sbt-web-scalajs-vite/src/sbt-test/sbt-web-scalajs-vite/basic-project) directory for basic example project.
 
 ## Package managers
 
@@ -116,10 +112,26 @@ vitePackageManager := new scalajsvite.PackageManager {
 ## Electron
 
 Plugin is also suitable for working with [Electron](https://www.electronjs.org/) projects. Each Electron script should 
-be specified as a seperate module in `scalaJSModuleInitializers`. Then the typical electron workflows can be executed
+be specified as a separate module in `scalaJSModuleInitializers`:
+
+```scala 
+scalaJSModuleInitializers := Seq(
+  ModuleInitializer
+    .mainMethodWithArgs("example.Main", "main")
+    .withModuleID("main"),
+  ModuleInitializer
+    .mainMethodWithArgs("example.Preload", "main")
+    .withModuleID("preload"),
+  ModuleInitializer
+    .mainMethodWithArgs("example.Renderer", "main")
+    .withModuleID("renderer")
+)
+```
+
+Then the typical Electron workflows can be executed
 with the use of [vite-plugin-electron](https://github.com/electron-vite/vite-plugin-electron).
 
-Example project can be found in`sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/electron-project/`.
+See [sbt-scalajs-vite/src/sbt-test/sbt-scalajs-vite/electron-project](sbt-scalajs-vite/src/sbt-test/sbt-scalajs-vite/electron-project) directory for example project.
 
 ## License
 

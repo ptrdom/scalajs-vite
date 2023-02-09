@@ -48,12 +48,7 @@ def viteElectronBuildTask(): Seq[Setting[_]] = {
             val exitValue = Process(
               "node" :: "node_modules/electron-builder/cli" :: Nil ::: args,
               targetDir
-            ).run(
-              ProcessLogger(
-                out => log.info(out),
-                err => log.error(err)
-              )
-            ).exitValue()
+            ).run(log).exitValue()
             if (exitValue != 0) {
               sys.error(s"Nonzero exit value: $exitValue")
             } else ()

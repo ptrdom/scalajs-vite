@@ -1,5 +1,3 @@
-import org.scalajs.linker.interface.ModuleInitializer
-
 ThisBuild / scalaVersion := "2.13.8"
 
 lazy val `basic-project` = (project in file(".")).aggregate(client, server)
@@ -8,11 +6,7 @@ lazy val client = project
   .in(file("client"))
   .enablePlugins(ScalaJSVitePlugin)
   .settings(
-    scalaJSModuleInitializers := Seq(
-      ModuleInitializer
-        .mainMethodWithArgs("example.Main", "main")
-        .withModuleID("main")
-    ),
+    scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scala-js-macrotask-executor" % "1.0.0",
       "org.scala-js" %%% "scalajs-dom" % "2.2.0"
@@ -81,7 +75,7 @@ InputKey[Unit]("html") := {
   }
 
   eventually {
-    find(tagName("h1")).head.text shouldBe "basic-project works!"
+    find(tagName("h1")).head.text shouldBe "basic-project-sbt-web works!"
   }
 
   ()

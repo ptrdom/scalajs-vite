@@ -2,7 +2,6 @@ package scalajsvite
 
 import sbt.File
 import sbt.util.Logger
-import scalajsvite.Logging.eagerLogger
 
 import scala.sys.process.Process
 
@@ -19,7 +18,7 @@ trait PackageManager {
         case _                        => Nil
       }) ::: name :: Nil ::: installCommand :: Nil,
       directory
-    ).run(eagerLogger(logger)).exitValue()
+    ).run(logger).exitValue()
     if (exitValue != 0) {
       sys.error(s"Nonzero exit value: $exitValue")
     } else ()
