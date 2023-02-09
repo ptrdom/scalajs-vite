@@ -2,7 +2,6 @@ package scalajsvite
 
 import sbt.File
 import sbt.util.Logger
-import scalajsvite.Logging.eagerLogger
 
 import scala.sys.process.Process
 
@@ -17,12 +16,12 @@ object ViteRunner {
         logger: Logger
     )(command: String, directory: File): Process = {
       Process(prepareCommand(command), directory)
-        .run(eagerLogger(logger))
+        .run(logger)
     }
 
     override def run(logger: Logger)(command: String, directory: File): Unit = {
       val exitValue = Process(prepareCommand(command), directory)
-        .run(eagerLogger(logger))
+        .run(logger)
         .exitValue()
       if (exitValue != 0) {
         sys.error(s"Nonzero exit value: $exitValue")
