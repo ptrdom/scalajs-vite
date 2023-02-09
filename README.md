@@ -62,7 +62,7 @@ directory.
 All files in `vite` directory are copied to Vite working directory, so any other web resources and relevant configuration
 files can be put there.
 
-See [sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/basic-project](sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/basic-project) directory for basic example project.
+See [sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/basic-project](sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/basic-project/build.sbt) directory for basic example project.
 
 ### Integrating with sbt-web
 
@@ -85,7 +85,7 @@ See [sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/basic-project](sbt-scalajs-vite/
    lazy val client = project.enablePlugins(ScalaJSVitePlugin)
    ```
 
-See [sbt-web-scalajs-vite/sbt-test/sbt-web-scalajs-vite/basic-project](sbt-web-scalajs-vite/sbt-test/sbt-web-scalajs-vite/basic-project) directory for basic example project.
+See [sbt-web-scalajs-vite/sbt-test/sbt-web-scalajs-vite/basic-project](sbt-web-scalajs-vite/sbt-test/sbt-web-scalajs-vite/basic-project/build.sbt) directory for basic example project.
 
 ## Package managers
 
@@ -131,7 +131,7 @@ scalaJSModuleInitializers := Seq(
 Then the typical Electron workflows can be executed
 with the use of [vite-plugin-electron](https://github.com/electron-vite/vite-plugin-electron).
 
-See [sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/electron-project](sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/electron-project) directory for example project.
+See [sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/electron-project](sbt-scalajs-vite/sbt-test/sbt-scalajs-vite/electron-project/build.sbt) directory for example project.
 
 ## License
 
