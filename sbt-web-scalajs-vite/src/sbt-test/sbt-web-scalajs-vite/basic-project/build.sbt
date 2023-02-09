@@ -8,11 +8,7 @@ lazy val client = project
   .in(file("client"))
   .enablePlugins(ScalaJSVitePlugin)
   .settings(
-    scalaJSModuleInitializers := Seq(
-      ModuleInitializer
-        .mainMethodWithArgs("example.Main", "main")
-        .withModuleID("main")
-    ),
+    scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scala-js-macrotask-executor" % "1.0.0",
       "org.scala-js" %%% "scalajs-dom" % "2.2.0"

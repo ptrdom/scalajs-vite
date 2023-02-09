@@ -4,11 +4,7 @@ enablePlugins(ScalaJSVitePlugin)
 
 scalaVersion := "2.13.8"
 
-scalaJSModuleInitializers := Seq(
-  ModuleInitializer
-    .mainMethodWithArgs("example.Main", "main")
-    .withModuleID("main")
-)
+scalaJSUseMainModuleInitializer := true
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0"
 
