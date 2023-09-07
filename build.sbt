@@ -1,6 +1,6 @@
 inThisBuild(
   List(
-    scalaVersion := "2.12.17",
+    scalaVersion := "2.12.18",
     organization := "me.ptrdom",
     homepage := Some(url("https://github.com/ptrdom/scalajs-vite")),
     licenses := List(License.MIT),
