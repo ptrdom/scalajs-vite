@@ -28,4 +28,4 @@ jobs:
       - name: Setup pnpm
         run: corepack prepare pnpm@7.0.1 --activate
       - name: Run tests
-        run: sbt scalafmtSbtCheck scalafmtCheckAll test scripted
+        run: sbt scalafmtSbtCheck scalafmtCheckAll test scriptedSequentialPerModule

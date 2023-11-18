@@ -51,3 +51,14 @@ lazy val `sbt-web-scalajs-vite` =
       }
     )
     .dependsOn(`sbt-scalajs-vite`)
+
+// workaround for https://github.com/sbt/sbt/issues/7431
+TaskKey[Unit]("scriptedSequentialPerModule") := {
+  Def.taskDyn {
+    val projects: Seq[ProjectReference] = `scalajs-vite`.aggregate
+    Def
+      .sequential(
+        projects.map(p => Def.taskDyn((p / scripted).toTask("")))
+      )
+  }.value
+}
