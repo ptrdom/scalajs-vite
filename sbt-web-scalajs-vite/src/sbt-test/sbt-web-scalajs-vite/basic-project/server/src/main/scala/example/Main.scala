@@ -24,7 +24,10 @@ object Main extends App {
     path("hello") {
       get {
         complete(
-          HttpEntity(ContentTypes.`text/plain(UTF-8)`, "basic-project-sbt-web works!")
+          HttpEntity(
+            ContentTypes.`text/plain(UTF-8)`,
+            "basic-project-sbt-web works!"
+          )
         )
       }
     },

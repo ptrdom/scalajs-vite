@@ -7,13 +7,13 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: coursier/cache-action@v5
+      - uses: coursier/cache-action@v6
       - uses: coursier/setup-action@v1
         with:
-          jvm: adopt:11
+          jvm: temurin:11
       - run: sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
