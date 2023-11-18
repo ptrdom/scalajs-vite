@@ -35,7 +35,7 @@ lazy val `sbt-scalajs-vite` =
     .enablePlugins(SbtPlugin)
     .settings(commonSettings)
     .settings(
-      addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.10.1")
+      addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.14.0")
     )
 
 lazy val `sbt-web-scalajs-vite` =
@@ -51,3 +51,14 @@ lazy val `sbt-web-scalajs-vite` =
       }
     )
     .dependsOn(`sbt-scalajs-vite`)
+
+// workaround for https://github.com/sbt/sbt/issues/7431
+TaskKey[Unit]("scriptedSequentialPerModule") := {
+  Def.taskDyn {
+    val projects: Seq[ProjectReference] = `scalajs-vite`.aggregate
+    Def
+      .sequential(
+        projects.map(p => Def.taskDyn((p / scripted).toTask("")))
+      )
+  }.value
+}
