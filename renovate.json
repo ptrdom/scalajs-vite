@@ -3,5 +3,5 @@
   "extends": [
     "config:recommended"
   ],
-  "enabledManagers": ["dockerfile", "npm"]
+  "enabledManagers": ["github-actions", "npm"]
 }
