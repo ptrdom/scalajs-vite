@@ -44,7 +44,7 @@ lazy val `sbt-web-scalajs-vite` =
     .enablePlugins(SbtPlugin)
     .settings(commonSettings)
     .settings(
-      addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.1.0"),
+      addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.1.0-0.6"),
       scriptedDependencies := {
         val () = scriptedDependencies.value
         val () = (`sbt-scalajs-vite` / publishLocal).value
