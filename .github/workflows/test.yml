@@ -24,8 +24,8 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
       - name: Setup yarn
-        run: corepack prepare yarn@1.22.15 --activate
+        run: corepack prepare yarn@1.22.19 --activate
       - name: Setup pnpm
-        run: corepack prepare pnpm@7.0.1 --activate
+        run: corepack prepare pnpm@8.14.3 --activate
       - name: Run tests
         run: sbt scalafmtSbtCheck scalafmtCheckAll test scriptedSequentialPerModule
