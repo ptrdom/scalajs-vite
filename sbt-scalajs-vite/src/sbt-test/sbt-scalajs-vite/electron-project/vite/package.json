@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "electron": "22.3.25",
-    "electron-builder": "23.6.0",
+    "electron-builder": "24.9.1",
     "vite-plugin-electron": "0.11.1",
     "vite": "4.5.2"
   }
