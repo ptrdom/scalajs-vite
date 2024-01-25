@@ -28,4 +28,6 @@ jobs:
       - name: Setup pnpm
         run: corepack prepare pnpm@8.14.3 --activate
       - name: Run tests
-        run: sbt scalafmtSbtCheck scalafmtCheckAll test scriptedSequentialPerModule
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: sbt scalafmtSbtCheck scalafmtCheckAll test scriptedSequentialPerModule

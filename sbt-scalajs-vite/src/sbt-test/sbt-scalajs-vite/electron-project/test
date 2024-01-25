@@ -1,25 +1,29 @@
-$ absent vite/package-lock.json
+$ absent app/vite/package-lock.json
 > clean
-> fastLinkJS/startVite
-# TODO html test with selenium and electron-chromedriver
-> fastLinkJS/stopVite
-$ exists vite/package-lock.json
+> set app/Compile/scalaJSStage := org.scalajs.sbtplugin.Stage.FastOpt
+> integration-test/test
+> app/fastLinkJS/startVite
+# TODO figure out how to test if dev mode works
+> app/fastLinkJS/stopVite
+$ exists app/vite/package-lock.json
 
-$ delete vite/package-lock.json
+$ delete app/vite/package-lock.json
 > clean
-> fullLinkJS/startVite
-# TODO html test with selenium and electron-chromedriver
-> fullLinkJS/stopVite
-$ exists vite/package-lock.json
+> set app/Compile/scalaJSStage := org.scalajs.sbtplugin.Stage.FullOpt
+> integration-test/test
+> app/fullLinkJS/startVite
+# TODO figure out how to test if dev mode works
+> app/fullLinkJS/stopVite
+$ exists app/vite/package-lock.json
 
-$ delete vite/package-lock.json
+$ delete app/vite/package-lock.json
 > clean
-> fastLinkJS/viteElectronBuildPackage
-> fastLinkJS/viteElectronBuildDistributable
-$ exists vite/package-lock.json
+> app/fastLinkJS/viteElectronBuildPackage
+> app/fastLinkJS/viteElectronBuildDistributable
+$ exists app/vite/package-lock.json
 
-$ delete vite/package-lock.json
+$ delete app/vite/package-lock.json
 > clean
-> fullLinkJS/viteElectronBuildPackage
-> fullLinkJS/viteElectronBuildDistributable
-$ exists vite/package-lock.json
+> app/fullLinkJS/viteElectronBuildPackage
+> app/fullLinkJS/viteElectronBuildDistributable
+$ exists app/vite/package-lock.json
