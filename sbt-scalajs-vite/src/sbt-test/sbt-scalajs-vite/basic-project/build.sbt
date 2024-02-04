@@ -1,7 +1,3 @@
-import java.nio.file.Paths
-
-import org.scalajs.jsenv.Input
-
 enablePlugins(ScalaJSVitePlugin)
 
 scalaVersion := "2.13.8"
@@ -75,15 +71,3 @@ lazy val perConfigSettings = Seq(
 )
 inConfig(Compile)(perConfigSettings)
 inConfig(Test)(perConfigSettings)
-
-Test / jsEnvInput := {
-  val input = (Test / jsEnvInput).value
-
-  (Test / fastLinkJS / viteBuild).value
-
-  Seq(
-    Input.Script(
-      (target.value / "scala-2.13/vite/test/dist/assets/index-n-o8S9at.js").toPath
-    )
-  )
-}

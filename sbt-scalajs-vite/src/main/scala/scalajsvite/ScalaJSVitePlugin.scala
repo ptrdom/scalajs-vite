@@ -1,20 +1,26 @@
 package scalajsvite
 
-import java.nio.file.Files
+import org.scalajs.jsenv.Input
 
+import java.nio.file.Files
 import org.scalajs.linker.interface.Report
 import org.scalajs.sbtplugin.ScalaJSPlugin
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.ModuleKind
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.fastLinkJS
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.fullLinkJS
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSLinkerConfig
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.scalaJSLinkerOutputDirectory
-import sbt._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{
+  ModuleKind,
+  fastLinkJS,
+  fullLinkJS,
+  jsEnvInput,
+  scalaJSLinkerConfig,
+  scalaJSLinkerOutputDirectory,
+  scalaJSStage
+}
+import sbt.*
 import sbt.AutoPlugin
-import sbt.Keys._
+import sbt.Keys.*
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.sys.process.Process
+import scala.util.Using
 
 object ScalaJSVitePlugin extends AutoPlugin {
 
@@ -173,6 +179,46 @@ object ScalaJSVitePlugin extends AutoPlugin {
     inConfig(Test)(perConfigSettings)
 
   private lazy val perConfigSettings: Seq[Setting[_]] = Seq(
+    jsEnvInput := Def.taskDyn {
+      val scalaJSStageV = scalaJSStage.value match {
+        case org.scalajs.sbtplugin.Stage.FastOpt => fastLinkJS
+        case org.scalajs.sbtplugin.Stage.FullOpt => fullLinkJS
+      }
+      val targetDir = (viteInstall / crossTarget).value
+
+      Def.task {
+        (Test / scalaJSStageV / viteBuild).value
+
+        Using(Files.list((targetDir / "/dist/assets/").toPath)) {
+          _.iterator().asScala
+            .filter(_.toFile.getName.endsWith(".js"))
+            .toList
+        }
+          .fold(
+            ex => throw new RuntimeException("Failed to get 'jsEnvInput'", ex),
+            {
+              case List(asset) =>
+                Right(asset)
+              case assets =>
+                Left(
+                  List(
+                    "Unable to automatically pick 'jsEnvInput' - ",
+                    if (assets == Nil) {
+                      "no JS assets produced"
+                    } else {
+                      s"more than one JS asset produced [$assets]"
+                    }
+                  ).mkString
+                )
+            }
+          )
+          .fold(
+            sys.error,
+            asset => Seq(Input.Script(asset))
+          )
+
+      }
+    }.value,
     unmanagedSourceDirectories += viteResourcesDirectory.value,
     viteInstall / crossTarget := {
       crossTarget.value /
