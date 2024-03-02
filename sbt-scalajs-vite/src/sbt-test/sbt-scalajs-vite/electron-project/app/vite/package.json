@@ -11,6 +11,6 @@
     "electron-builder": "24.12.0",
     "vite-plugin-electron": "0.28.2",
     "vite": "5.1.4",
-    "playwright": "1.42.0"
+    "playwright": "1.42.1"
   }
 }
