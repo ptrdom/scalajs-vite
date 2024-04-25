@@ -6,7 +6,7 @@ import scala.sys.process._
 lazy val root = (project in file("."))
   .aggregate(app, `integration-test`)
 
-ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / scalaVersion := "2.13.13"
 
 val viteElectronBuildPackage =
   taskKey[Unit]("Generate package directory with electron-builder")
