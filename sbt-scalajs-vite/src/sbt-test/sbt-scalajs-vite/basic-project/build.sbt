@@ -6,6 +6,8 @@ scalaJSUseMainModuleInitializer := true
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0"
 
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.17" % "test"
+
 InputKey[Unit]("html") := {
   import org.openqa.selenium.WebDriver
   import org.openqa.selenium.chrome.ChromeDriver
@@ -55,3 +57,17 @@ InputKey[Unit]("html") := {
 
   ()
 }
+
+lazy val perConfigSettings = Seq(
+  jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(
+    org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
+      .Config()
+      .withEnv(
+        Map(
+          "NODE_PATH" -> ((viteInstall / crossTarget).value / "node_modules").absolutePath
+        )
+      )
+  )
+)
+inConfig(Compile)(perConfigSettings)
+inConfig(Test)(perConfigSettings)
