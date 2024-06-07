@@ -4,6 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "devDependencies": {
-    "vite": "5.2.12"
+    "vite": "5.2.13"
   }
 }
