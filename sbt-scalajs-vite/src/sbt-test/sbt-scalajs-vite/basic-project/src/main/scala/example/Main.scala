@@ -12,6 +12,7 @@ object Main extends App {
   )
 
   def setupUI(): Unit = {
-    document.querySelector("#app").innerHTML = "<h1>basic-project works!</h1>".stripMargin
+    document.querySelector("#app").innerHTML =
+      "<h1>basic-project works!</h1>".stripMargin
   }
 }
