@@ -100,5 +100,8 @@ lazy val `integration-test` = (project in file("integration-test"))
         )
       }
     }.value,
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.15" % "test"
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scala-js-macrotask-executor" % "1.0.0" % "test",
+      "org.scalatest" %%% "scalatest" % "3.2.15" % "test"
+    )
   )
