@@ -35,7 +35,7 @@ lazy val `sbt-scalajs-vite` =
     .enablePlugins(SbtPlugin)
     .settings(commonSettings)
     .settings(
-      addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.18.2")
+      addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.19.0")
     )
 
 lazy val `sbt-web-scalajs-vite` =
