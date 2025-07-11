@@ -12,8 +12,6 @@ inThisBuild(
         url("http://ptrdom.me/")
       )
     ),
-    sonatypeCredentialHost := "s01.oss.sonatype.org",
-    sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
     versionScheme := Some("semver-spec")
   )
 )
