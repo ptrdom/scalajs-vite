@@ -19,7 +19,7 @@ jobs:
       - uses: coursier/setup-action@v1
         with:
           jvm: temurin:11
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22.19.0
       - name: Enable Corepack
