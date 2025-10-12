@@ -28,4 +28,4 @@ libraryDependencies += "org.scalatestplus" %% "selenium-4-9" % "3.2.16.0"
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java" % "4.12.1"
 libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.16"
 
-libraryDependencies += "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.1.0"
+libraryDependencies += "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.1.1"
