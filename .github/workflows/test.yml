@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
-      - uses: coursier/cache-action@v6
+      - uses: coursier/cache-action@v7
       - uses: coursier/setup-action@v1
         with:
           jvm: temurin:11
