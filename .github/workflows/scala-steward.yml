@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-24.04
     name: Launch Scala Steward
     steps:
-      - uses: coursier/setup-action@v1
+      - uses: coursier/setup-action@v2
         with:
           jvm: temurin:11
           apps: sbt
