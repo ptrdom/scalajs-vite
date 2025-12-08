@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "devDependencies": {
-    "vite": "7.2.6",
+    "vite": "7.2.7",
     "jsdom": "27.2.0"
   }
 }
