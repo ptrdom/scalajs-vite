@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "electron": "42.4.0",
-    "electron-builder": "26.15.2",
+    "electron-builder": "26.15.3",
     "vite-plugin-electron": "1.0.4",
     "vite": "8.0.16",
     "playwright": "1.60.0"
