@@ -3,5 +3,20 @@
   "extends": [
     "config:recommended"
   ],
-  "enabledManagers": ["github-actions", "npm"]
+  "enabledManagers": ["github-actions", "npm", "custom.regex"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
+      "matchStrings": ["apps: sbt:(?<currentValue>\\S+)"],
+      "depNameTemplate": "org.scala-sbt:sbt-launch",
+      "datasourceTemplate": "maven"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["org.scala-sbt:sbt-launch"],
+      "allowedVersions": "<2.0.0"
+    }
+  ]
 }
