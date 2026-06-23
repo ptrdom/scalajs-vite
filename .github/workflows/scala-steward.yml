@@ -18,7 +18,7 @@ jobs:
           jvm: temurin:11
           # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
           # requires JDK 17+. Kept in sync with sbt releases by Renovate.
-          apps: sbt:1.12.12
+          apps: sbt:1.12.13
       - name: Launch Scala Steward
         uses: scala-steward-org/scala-steward-action@v2.84.0
         with:
