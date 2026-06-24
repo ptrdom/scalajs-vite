@@ -16,9 +16,10 @@ jobs:
       - uses: coursier/setup-action@v3
         with:
           jvm: temurin:11
-          # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
-          # requires JDK 17+. Kept in sync with sbt releases by Renovate.
-          apps: sbt:1.12.13
+          # Pin to the last sbt 1.x-default launcher: 1.12.13+ defaults to the
+          # sbt 2.x runner, which requires JDK 17+. Renovate is constrained to
+          # not bump past this in renovate.json.
+          apps: sbt:1.12.12
       - name: Launch Scala Steward
         uses: scala-steward-org/scala-steward-action@v2.84.0
         with:

@@ -19,10 +19,11 @@ jobs:
       - uses: coursier/setup-action@v3
         with:
           jvm: temurin:11
-          # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
-          # requires JDK 17+ and parses CLI commands differently. Kept in
-          # sync with sbt releases by Renovate.
-          apps: sbt:1.12.13
+          # Pin to the last sbt 1.x-default launcher: 1.12.13+ defaults to the
+          # sbt 2.x runner, which requires JDK 17+ (breaking the JDK 8 matrix)
+          # and parses CLI commands differently. Renovate is constrained to not
+          # bump past this in renovate.json.
+          apps: sbt:1.12.12
       - uses: actions/setup-node@v6
         with:
           node-version: 24.18.0
