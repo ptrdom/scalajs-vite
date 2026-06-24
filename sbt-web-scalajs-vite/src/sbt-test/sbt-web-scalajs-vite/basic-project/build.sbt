@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "2.13.17"
+ThisBuild / scalaVersion := "2.13.18"
 
 lazy val `basic-project` = (project in file(".")).aggregate(client, server)
 

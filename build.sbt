@@ -78,7 +78,7 @@ lazy val `scala-steward-hooks` = project
   .enablePlugins(ScalaJSPlugin)
   .settings(
     publish / skip := true,
-    scalaVersion := "2.13.17",
+    scalaVersion := "2.13.18",
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "2.8.1",
       "org.scala-js" %%% "scala-js-macrotask-executor" % "1.1.1",
