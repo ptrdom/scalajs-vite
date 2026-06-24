@@ -30,7 +30,7 @@ lazy val app = (project in file("app"))
         .mainMethodWithArgs("example.Renderer", "main")
         .withModuleID("renderer")
     ),
-    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.8.1",
     Seq(Compile, Test)
       .flatMap { config =>
         inConfig(config)(
