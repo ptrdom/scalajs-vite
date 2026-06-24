@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: coursier/setup-action@v3
         with:
-          jvm: temurin:11
-          # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
-          # requires JDK 17+. Kept in sync with sbt releases by Renovate.
+          # scala-steward-action v2.90.0 bundles its own sbt 2.x runner, which
+          # requires JDK 17+ regardless of the stewarded project's sbt version.
+          jvm: temurin:17
           apps: sbt:1.12.13
       - name: Launch Scala Steward
         uses: scala-steward-org/scala-steward-action@v2.90.0
