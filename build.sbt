@@ -80,7 +80,7 @@ lazy val `scala-steward-hooks` = project
     publish / skip := true,
     scalaVersion := "2.13.17",
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+      "org.scala-js" %%% "scalajs-dom" % "2.8.1",
       "org.scala-js" %%% "scala-js-macrotask-executor" % "1.1.1",
       "org.scalatest" %%% "scalatest" % "3.2.17",
       "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20",
