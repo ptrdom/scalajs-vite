@@ -18,7 +18,7 @@ inThisBuild(
 
 lazy val `scalajs-vite` = (project in file("."))
   .settings(publish / skip := true)
-  .aggregate(`sbt-scalajs-vite`, `sbt-web-scalajs-vite`)
+  .aggregate(`sbt-scalajs-vite`, `sbt-web-scalajs-vite`, `scala-steward-hooks`)
 
 lazy val commonSettings = Seq(
   scriptedLaunchOpts ++= Seq(
@@ -56,7 +56,39 @@ TaskKey[Unit]("scriptedSequentialPerModule") := {
     val projects: Seq[ProjectReference] = `scalajs-vite`.aggregate
     Def
       .sequential(
-        projects.map(p => Def.taskDyn((p / scripted).toTask("")))
+        projects.map(p =>
+          Def.taskDyn {
+            (p / scripted).?.value match {
+              case Some(_) => (p / scripted).toTask("")
+              case None    => Def.task(())
+            }
+          }
+        )
       )
   }.value
 }
+
+// Declares the library dependencies used in the scripted tests so that Scala
+// Steward keeps them up to date. The scripted test build definitions are not
+// part of this build, so without this project Scala Steward would not discover
+// these dependencies. The versions here must match the ones used in the
+// scripted tests for Scala Steward's version replacement to reach them.
+lazy val `scala-steward-hooks` = project
+  .in(file("scala-steward-hooks"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    publish / skip := true,
+    scalaVersion := "2.13.17",
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+      "org.scala-js" %%% "scala-js-macrotask-executor" % "1.0.0",
+      "org.scalatest" %%% "scalatest" % "3.2.17",
+      "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.16",
+      "org.scalatestplus" %% "selenium-4-9" % "3.2.16.0",
+      "org.seleniumhq.selenium" % "selenium-java" % "4.12.1",
+      "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.1.1",
+      "com.typesafe.akka" %% "akka-actor-typed" % "2.6.20",
+      "com.typesafe.akka" %% "akka-stream" % "2.6.20",
+      "com.typesafe.akka" %% "akka-http" % "10.2.10"
+    )
+  )
