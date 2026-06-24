@@ -85,7 +85,7 @@ lazy val `scala-steward-hooks` = project
       "org.scalatest" %%% "scalatest" % "3.2.20",
       "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.20",
       "org.scalatestplus" %% "selenium-4-9" % "3.2.16.0",
-      "org.seleniumhq.selenium" % "selenium-java" % "4.12.1",
+      "org.seleniumhq.selenium" % "selenium-java" % "4.45.0",
       "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.1.1",
       "com.typesafe.akka" %% "akka-actor-typed" % "2.6.20",
       "com.typesafe.akka" %% "akka-stream" % "2.6.20",
