@@ -6,7 +6,7 @@ scalaJSUseMainModuleInitializer := true
 
 libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.8.1"
 
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.17" % "test"
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.20" % "test"
 
 InputKey[Unit]("html") := {
   import org.openqa.selenium.WebDriver
