@@ -20,7 +20,7 @@ jobs:
           jvm: temurin:17
           apps: sbt:1.12.13
       - name: Launch Scala Steward
-        uses: scala-steward-org/scala-steward-action@v2.90.0
+        uses: scala-steward-org/scala-steward-action@v2.92.0
         with:
           github-app-id: ${{ secrets.SCALA_STEWARD_APP_ID }}
           github-app-installation-id: ${{ secrets.SCALA_STEWARD_APP_INSTALLATION_ID }}
