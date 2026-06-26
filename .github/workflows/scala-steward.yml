@@ -13,15 +13,20 @@ jobs:
     runs-on: ubuntu-24.04
     name: Launch Scala Steward
     steps:
+      - uses: coursier/cache-action@v8
       - uses: coursier/setup-action@v3
         with:
-          # scala-steward-action v2.90.0 bundles its own sbt 2.x runner, which
-          # requires JDK 17+ regardless of the stewarded project's sbt version.
-          jvm: temurin:17
+          jvm: temurin:11
+          # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
+          # requires JDK 17+. Kept in sync with sbt releases by Renovate.
           apps: sbt:1.12.13
       - name: Launch Scala Steward
         uses: scala-steward-org/scala-steward-action@v2.92.0
         with:
+          # Pin the sbt and scalafmt versions Scala Steward runs against to the
+          # ones used in this repository. Kept in sync by Renovate.
+          sbt-version: 1.12.13
+          scalafmt-version: 3.11.1
           github-app-id: ${{ secrets.SCALA_STEWARD_APP_ID }}
           github-app-installation-id: ${{ secrets.SCALA_STEWARD_APP_INSTALLATION_ID }}
           github-app-key: ${{ secrets.SCALA_STEWARD_APP_PRIVATE_KEY }}
