@@ -10,7 +10,7 @@
     "electron": "42.5.1",
     "electron-builder": "26.15.3",
     "vite-plugin-electron": "1.1.0",
-    "vite": "8.1.0",
+    "vite": "8.1.1",
     "playwright": "1.61.1"
   }
 }
