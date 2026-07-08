@@ -48,6 +48,11 @@
     {
       "matchPackageNames": ["scalameta/scalafmt"],
       "groupName": "scalafmt"
+    },
+    {
+      "description": "rolldown is pinned via overrides/resolutions in the scripted vite fixtures to work around a runtime regression in 1.1.4 (vite's ~1.1.3 range otherwise floats to it and breaks the jsdom test bundle). Remove the pin once a fixed rolldown ships.",
+      "matchPackageNames": ["rolldown"],
+      "groupName": "rolldown"
     }
   ]
 }
