@@ -23,6 +23,12 @@ jobs:
       - name: Launch Scala Steward
         uses: scala-steward-org/scala-steward-action@v2.92.0
         with:
+          # Pin Scala Steward itself. The action otherwise downloads the latest
+          # published version on every run; 0.39.1 dropped the Java 11 build and
+          # requires Java 17+, which breaks the temurin:11 runner above. Renovate
+          # tracks this pin; a bump past 0.39.0 fails on first run until the
+          # runner is moved to JDK 17.
+          scala-steward-version: 0.39.0
           # Pin the sbt and scalafmt versions Scala Steward runs against to the
           # ones used in this repository. Kept in sync by Renovate.
           sbt-version: 1.12.13
