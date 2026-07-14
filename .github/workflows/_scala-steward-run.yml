@@ -26,7 +26,9 @@ jobs:
       - uses: coursier/cache-action@v8
       - uses: coursier/setup-action@v3
         with:
-          jvm: temurin:11
+          # Scala Steward 0.39.1+ dropped the Java 11 build and requires JDK 17+
+          # (see the scala-steward-version pin below), so the runner is on 17.
+          jvm: temurin:17
           # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
           # requires JDK 17+. Kept in sync with sbt releases by Renovate.
           apps: sbt:1.12.13
@@ -39,10 +41,9 @@ jobs:
         uses: scala-steward-org/scala-steward-action@v2.92.0
         with:
           # Pin Scala Steward itself. The action otherwise downloads the latest
-          # published version on every run; 0.39.1 dropped the Java 11 build and
-          # requires Java 17+, which breaks the temurin:11 runner above. Renovate
-          # tracks this pin; a bump past 0.39.0 fails on first run until the
-          # runner is moved to JDK 17.
+          # published version on every run. 0.39.1 dropped the Java 11 build and
+          # requires Java 17+, which is why the runner above uses temurin:17.
+          # Renovate tracks this pin.
           scala-steward-version: 0.39.1
           # Pin the sbt and scalafmt versions Scala Steward runs against to the
           # ones used in this repository. Kept in sync by Renovate.
