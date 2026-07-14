@@ -1,0 +1,67 @@
+# Reusable pipeline shared by every run kind, called from scala-steward.yml.
+# All the kind-specific behaviour is gated on inputs.kind so the logic lives in
+# one place; scala-steward.yml decides the kind and selects which caller job
+# runs.
+#   LIVE    - workflow_dispatch / schedule / push to main: real run, GitHub App
+#             auth, opens dependency-update PRs.
+#   DRY_RUN - pull_request: exercise the full update-detection pipeline with
+#             updates.limit = 0 (no PRs) using the read-only github.token.
+on:
+  workflow_call:
+    inputs:
+      kind:
+        description: "LIVE | DRY_RUN"
+        required: true
+        type: string
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    name: Launch Scala Steward
+    steps:
+      # DRY_RUN passes repo-config to the action, which reads it from the
+      # workspace, so the repo must be checked out. LIVE needs no checkout:
+      # Scala Steward clones the target repo itself.
+      - uses: actions/checkout@v7
+        if: inputs.kind == 'DRY_RUN'
+      - uses: coursier/cache-action@v8
+      - uses: coursier/setup-action@v3
+        with:
+          jvm: temurin:11
+          # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
+          # requires JDK 17+. Kept in sync with sbt releases by Renovate.
+          apps: sbt:1.12.13
+      # Two separate invocations rather than one with expression-computed
+      # inputs: the auth differs structurally (GitHub App vs github.token), and
+      # passing blank github-app-* inputs risks the action treating App auth as
+      # requested. The version pins are shared verbatim between them.
+      - name: Launch Scala Steward
+        if: inputs.kind == 'LIVE'
+        uses: scala-steward-org/scala-steward-action@v2.92.0
+        with:
+          # Pin Scala Steward itself. The action otherwise downloads the latest
+          # published version on every run; 0.39.1 dropped the Java 11 build and
+          # requires Java 17+, which breaks the temurin:11 runner above. Renovate
+          # tracks this pin; a bump past 0.39.0 fails on first run until the
+          # runner is moved to JDK 17.
+          scala-steward-version: 0.39.0
+          # Pin the sbt and scalafmt versions Scala Steward runs against to the
+          # ones used in this repository. Kept in sync by Renovate.
+          sbt-version: 1.12.13
+          scalafmt-version: 3.11.3
+          github-app-id: ${{ secrets.SCALA_STEWARD_APP_ID }}
+          github-app-installation-id: ${{ secrets.SCALA_STEWARD_APP_INSTALLATION_ID }}
+          github-app-key: ${{ secrets.SCALA_STEWARD_APP_PRIVATE_KEY }}
+          github-app-auth-only: true
+      - name: Launch Scala Steward (dry run)
+        if: inputs.kind == 'DRY_RUN'
+        uses: scala-steward-org/scala-steward-action@v2.92.0
+        with:
+          # Kept in sync with the LIVE invocation above (Renovate).
+          scala-steward-version: 0.39.0
+          sbt-version: 1.12.13
+          scalafmt-version: 3.11.3
+          # No github-app-* inputs: the action falls back to the default
+          # read-only github.token (so this also works on fork PRs). The
+          # default repo config forces updates.limit = 0, so no PRs are opened
+          # even before auth would matter.
+          repo-config: .github/scala-steward-dry-run.conf

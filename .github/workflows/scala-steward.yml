@@ -5,35 +5,56 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 name: Launch Scala Steward
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Deny-all default: each job opts back in to exactly what it needs.
+permissions: {}
+
 jobs:
-  scala-steward:
+  # Decide once what this run does, then fan out to one job per kind so each
+  # appears as its own job in the UI. The shared pipeline lives in
+  # _scala-steward-run.yml; the jobs below only select it.
+  #   LIVE    - workflow_dispatch / schedule / push to main: opens PRs.
+  #   DRY_RUN - pull_request: exercise the pipeline, open no PRs.
+  determine:
     runs-on: ubuntu-24.04
-    name: Launch Scala Steward
+    permissions:
+      contents: read
+    outputs:
+      kind: ${{ steps.kind.outputs.kind }}
     steps:
-      - uses: coursier/cache-action@v8
-      - uses: coursier/setup-action@v3
-        with:
-          jvm: temurin:11
-          # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
-          # requires JDK 17+. Kept in sync with sbt releases by Renovate.
-          apps: sbt:1.12.13
-      - name: Launch Scala Steward
-        uses: scala-steward-org/scala-steward-action@v2.92.0
-        with:
-          # Pin Scala Steward itself. The action otherwise downloads the latest
-          # published version on every run; 0.39.1 dropped the Java 11 build and
-          # requires Java 17+, which breaks the temurin:11 runner above. Renovate
-          # tracks this pin; a bump past 0.39.0 fails on first run until the
-          # runner is moved to JDK 17.
-          scala-steward-version: 0.39.0
-          # Pin the sbt and scalafmt versions Scala Steward runs against to the
-          # ones used in this repository. Kept in sync by Renovate.
-          sbt-version: 1.12.13
-          scalafmt-version: 3.11.3
-          github-app-id: ${{ secrets.SCALA_STEWARD_APP_ID }}
-          github-app-installation-id: ${{ secrets.SCALA_STEWARD_APP_INSTALLATION_ID }}
-          github-app-key: ${{ secrets.SCALA_STEWARD_APP_PRIVATE_KEY }}
-          github-app-auth-only: true
+      - name: Determine run kind
+        id: kind
+        run: |
+          case "$GITHUB_EVENT_NAME" in
+            pull_request) KIND=DRY_RUN ;;
+            *) KIND=LIVE ;;
+          esac
+          echo "Run kind: $KIND"
+          echo "kind=$KIND" >> "$GITHUB_OUTPUT"
+  live:
+    needs: determine
+    if: needs.determine.outputs.kind == 'LIVE'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/_scala-steward-run.yml
+    with:
+      kind: LIVE
+    secrets: inherit
+  dry-run:
+    needs: determine
+    if: needs.determine.outputs.kind == 'DRY_RUN'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/_scala-steward-run.yml
+    with:
+      kind: DRY_RUN
+    secrets: inherit
