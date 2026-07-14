@@ -58,7 +58,7 @@
       "groupName": "scalafmt"
     },
     {
-      "description": "Pinned to 0.39.0, the last Java 11 build; 0.39.1+ requires Java 17+ and will fail on the temurin:11 runner in scala-steward.yml. Bump PRs are intentionally left uncapped: a bump beyond 0.39.0 fails first run and is resolved by moving the runner to JDK 17.",
+      "description": "Groups Scala Steward version bumps. 0.39.1+ dropped the Java 11 build and ships Java 17 bytecode, so the runner in _scala-steward-run.yml must stay on JDK 17.",
       "matchPackageNames": ["scala-steward-org/scala-steward"],
       "groupName": "scala-steward"
     },
