@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "devDependencies": {
-    "vite": "8.1.4"
+    "vite": "8.1.5"
   },
   "overrides": {
     "rolldown": "1.1.3"
