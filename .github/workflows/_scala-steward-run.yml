@@ -48,7 +48,7 @@ jobs:
           # Pin the sbt and scalafmt versions Scala Steward runs against to the
           # ones used in this repository. Kept in sync by Renovate.
           sbt-version: 1.12.14
-          scalafmt-version: 3.11.3
+          scalafmt-version: 3.11.4
           github-app-id: ${{ secrets.SCALA_STEWARD_APP_ID }}
           github-app-installation-id: ${{ secrets.SCALA_STEWARD_APP_INSTALLATION_ID }}
           github-app-key: ${{ secrets.SCALA_STEWARD_APP_PRIVATE_KEY }}
@@ -60,7 +60,7 @@ jobs:
           # Kept in sync with the LIVE invocation above (Renovate).
           scala-steward-version: 0.39.1
           sbt-version: 1.12.14
-          scalafmt-version: 3.11.3
+          scalafmt-version: 3.11.4
           # No github-app-* inputs: the action falls back to the default
           # read-only github.token (so this also works on fork PRs). The
           # default repo config forces updates.limit = 0, so no PRs are opened
