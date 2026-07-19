@@ -31,7 +31,7 @@ jobs:
           jvm: temurin:17
           # Pin to the sbt 1.x runner: the latest runner is sbt 2.x, which
           # requires JDK 17+. Kept in sync with sbt releases by Renovate.
-          apps: sbt:1.12.13
+          apps: sbt:1.12.14
       # Two separate invocations rather than one with expression-computed
       # inputs: the auth differs structurally (GitHub App vs github.token), and
       # passing blank github-app-* inputs risks the action treating App auth as
@@ -47,7 +47,7 @@ jobs:
           scala-steward-version: 0.39.1
           # Pin the sbt and scalafmt versions Scala Steward runs against to the
           # ones used in this repository. Kept in sync by Renovate.
-          sbt-version: 1.12.13
+          sbt-version: 1.12.14
           scalafmt-version: 3.11.3
           github-app-id: ${{ secrets.SCALA_STEWARD_APP_ID }}
           github-app-installation-id: ${{ secrets.SCALA_STEWARD_APP_INSTALLATION_ID }}
@@ -59,7 +59,7 @@ jobs:
         with:
           # Kept in sync with the LIVE invocation above (Renovate).
           scala-steward-version: 0.39.1
-          sbt-version: 1.12.13
+          sbt-version: 1.12.14
           scalafmt-version: 3.11.3
           # No github-app-* inputs: the action falls back to the default
           # read-only github.token (so this also works on fork PRs). The
