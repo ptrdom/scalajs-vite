@@ -19,9 +19,8 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": ["scalafmt-version: (?<currentValue>\\S+)"],
-      "depNameTemplate": "scalameta/scalafmt",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
+      "depNameTemplate": "org.scalameta:scalafmt-cli_2.13",
+      "datasourceTemplate": "maven"
     },
     {
       "customType": "regex",
@@ -42,9 +41,8 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.scalafmt\\.conf$/"],
       "matchStrings": ["version\\s*=\\s*(?<currentValue>\\S+)"],
-      "depNameTemplate": "scalameta/scalafmt",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
+      "depNameTemplate": "org.scalameta:scalafmt-cli_2.13",
+      "datasourceTemplate": "maven"
     }
   ],
   "packageRules": [
@@ -54,7 +52,8 @@
       "allowedVersions": "<2.0.0"
     },
     {
-      "matchPackageNames": ["scalameta/scalafmt"],
+      "description": "Tracked through the Maven artifact coursier resolves (org.scalameta::scalafmt-cli, _2.13 being coursier's default Scala version) rather than the GitHub release: the release tag lands hours before the JARs reach Maven Central, and a bump PR opened in that window fails in scala-steward-action's `cs install scalafmt:<version>`.",
+      "matchPackageNames": ["org.scalameta:scalafmt-cli_2.13"],
       "groupName": "scalafmt"
     },
     {
