@@ -38,7 +38,7 @@ jobs:
       # requested. The version pins are shared verbatim between them.
       - name: Launch Scala Steward
         if: inputs.kind == 'LIVE'
-        uses: scala-steward-org/scala-steward-action@v2.93.0
+        uses: scala-steward-org/scala-steward-action@v2.96.0
         with:
           # Pin Scala Steward itself. The action otherwise downloads the latest
           # published version on every run. 0.39.1 dropped the Java 11 build and
@@ -55,7 +55,7 @@ jobs:
           github-app-auth-only: true
       - name: Launch Scala Steward (dry run)
         if: inputs.kind == 'DRY_RUN'
-        uses: scala-steward-org/scala-steward-action@v2.93.0
+        uses: scala-steward-org/scala-steward-action@v2.96.0
         with:
           # Kept in sync with the LIVE invocation above (Renovate).
           scala-steward-version: 0.39.1
