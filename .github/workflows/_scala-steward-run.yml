@@ -44,7 +44,7 @@ jobs:
           # published version on every run. 0.39.1 dropped the Java 11 build and
           # requires Java 17+, which is why the runner above uses temurin:17.
           # Renovate tracks this pin.
-          scala-steward-version: 0.39.1
+          scala-steward-version: 0.39.2
           # Pin the sbt and scalafmt versions Scala Steward runs against to the
           # ones used in this repository. Kept in sync by Renovate.
           sbt-version: 1.13.0
@@ -58,7 +58,7 @@ jobs:
         uses: scala-steward-org/scala-steward-action@v2.96.0
         with:
           # Kept in sync with the LIVE invocation above (Renovate).
-          scala-steward-version: 0.39.1
+          scala-steward-version: 0.39.2
           sbt-version: 1.13.0
           scalafmt-version: 3.11.5
           # No github-app-* inputs: the action falls back to the default
