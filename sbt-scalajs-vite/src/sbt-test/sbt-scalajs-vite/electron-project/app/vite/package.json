@@ -11,7 +11,7 @@
     "electron-builder": "26.15.3",
     "vite-plugin-electron": "1.1.2",
     "vite": "8.2.2",
-    "playwright": "1.62.1"
+    "playwright": "1.63.0"
   },
   "overrides": {
     "rolldown": "1.2.7"
