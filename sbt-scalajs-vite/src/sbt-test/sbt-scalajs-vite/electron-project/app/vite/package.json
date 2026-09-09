@@ -14,9 +14,9 @@
     "playwright": "1.63.0"
   },
   "overrides": {
-    "rolldown": "1.2.7"
+    "rolldown": "1.2.8"
   },
   "resolutions": {
-    "rolldown": "1.2.7"
+    "rolldown": "1.2.8"
   }
 }
