@@ -15,7 +15,7 @@ on:
         type: string
 jobs:
   run:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     name: Launch Scala Steward
     steps:
       # DRY_RUN passes repo-config to the action, which reads it from the
