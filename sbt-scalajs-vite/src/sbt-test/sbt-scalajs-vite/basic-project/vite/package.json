@@ -8,9 +8,9 @@
     "jsdom": "30.1.1"
   },
   "overrides": {
-    "rolldown": "1.2.9"
+    "rolldown": "1.2.10"
   },
   "resolutions": {
-    "rolldown": "1.2.9"
+    "rolldown": "1.2.10"
   }
 }
