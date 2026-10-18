@@ -1,6 +1,6 @@
 enablePlugins(ScalaJSVitePlugin)
 
-scalaVersion := "2.13.18"
+scalaVersion := "3.10.0"
 
 scalaJSUseMainModuleInitializer := true
 
