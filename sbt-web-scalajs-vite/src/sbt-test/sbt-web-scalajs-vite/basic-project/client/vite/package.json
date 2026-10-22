@@ -7,9 +7,9 @@
     "vite": "8.3.5"
   },
   "overrides": {
-    "rolldown": "1.2.14"
+    "rolldown": "1.2.15"
   },
   "resolutions": {
-    "rolldown": "1.2.14"
+    "rolldown": "1.2.15"
   }
 }
