@@ -23,7 +23,7 @@ jobs:
       # Scala Steward clones the target repo itself.
       - uses: actions/checkout@v7
         if: inputs.kind == 'DRY_RUN'
-      - uses: coursier/cache-action@v8
+      - uses: coursier/cache-action@v9
       - uses: coursier/setup-action@v3
         with:
           # Scala Steward 0.39.1+ dropped the Java 11 build and requires JDK 17+
