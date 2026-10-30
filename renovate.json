@@ -43,6 +43,13 @@
       "matchStrings": ["version\\s*=\\s*(?<currentValue>\\S+)"],
       "depNameTemplate": "org.scalameta:scalafmt-cli_2.13",
       "datasourceTemplate": "maven"
+    },
+    {
+      "customType": "regex",
+      "description": "Runner labels in the test matrix: the github-actions manager does not resolve `runs-on: ${{ matrix.os }}`.",
+      "managerFilePatterns": ["/^\\.github/workflows/test\\.yml$/"],
+      "matchStrings": ["\\b(?<depName>ubuntu|windows|macos)-(?<currentValue>\\d+(?:\\.\\d+)?)\\b"],
+      "datasourceTemplate": "github-runners"
     }
   ],
   "packageRules": [
