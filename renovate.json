@@ -54,6 +54,11 @@
   ],
   "packageRules": [
     {
+      "description": "Yarn 4 refuses versions younger than its default npmMinimalAgeGate of 1 day, which would fail the scripted tests on exact pins. CI still activates Yarn 1.22.19, which has no such gate, so this is a precaution for moving to Yarn 4 and keeps the policy in line with scalajs-esbuild.",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "1 day"
+    },
+    {
       "matchPackageNames": ["org.scala-sbt:sbt-launch"],
       "groupName": "sbt",
       "allowedVersions": "<2.0.0"
